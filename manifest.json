@@ -1,0 +1,25 @@
+{
+  "name": "KBA Gecko Vault",
+  "short_name": "KBA Geckos",
+  "description": "KBA Geckos breeding management app",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0d1210",
+  "theme_color": "#1eaa1e",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
