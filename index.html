@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta http-equiv="Cache-Control" content="no-cache">
-<meta name="build-version" content="2026.03.19.0747">
+<meta name="build-version" content="2026.03.23.preserved-genetics">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>KBA Geckos — Gecko Vault v4.3 build 2026.03.19.0747</title>
+<title>KBA Geckos — Gecko Vault preserved+genetics build 2026.03.23</title>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -310,54 +310,104 @@ body{
 
 /* ── MAIN HEADER ── */
 .mh{
+  position:sticky;
+  top:0;
+  z-index:28;
   padding:16px 20px 14px;
-  border-bottom:1px solid var(--gbr);
+  border-bottom:1px solid rgba(255,255,255,.05);
   display:flex;
   align-items:center;
   gap:14px;
   flex-shrink:0;
-  background:var(--gs);
+  background:rgba(11,18,13,.74);
+  backdrop-filter:blur(16px) saturate(130%);
+  -webkit-backdrop-filter:blur(16px) saturate(130%);
+  box-shadow:0 10px 24px rgba(0,0,0,.16);
 }
 .mh-av{width:52px;height:52px;border-radius:10px;overflow:hidden;flex-shrink:0;background:var(--gc);display:flex;align-items:center;justify-content:center}
 .mh-av img{width:100%;height:100%;object-fit:cover}
 .mh-av-ph{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700}
+.avatar-ph{width:100%;height:100%;display:flex;align-items:center;justify-content:center}
+.avatar-ph svg{width:24px;height:24px;opacity:.9}
+.gav .avatar-ph svg{width:18px;height:18px}
+#mh-av{cursor:pointer}
+#mh-av[title]{position:relative}
 .mh-info{flex:1;min-width:0}
 .mh-name{font-size:20px;font-weight:700;line-height:1.1}
 .mh-serial{font-size:11px;font-family:var(--fm);color:var(--gm);letter-spacing:.06em;margin-top:3px}
 .mh-badges{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
 .mh-actions{display:flex;gap:8px;flex-shrink:0}
 
-/* ── TABS ── */
+/* ── NEXT-LEVEL TABS ── */
 .tabs{
-  display:flex;
-  gap:2px;
-  padding:0 16px;
-  border-bottom:1px solid var(--gbr);
-  background:var(--gs);
+  position:sticky;
+  top:83px;
+  z-index:26;
+  padding:10px 16px 12px;
+  border-bottom:1px solid rgba(255,255,255,.05);
+  background:rgba(10,18,12,.68);
+  backdrop-filter:blur(14px) saturate(135%);
+  -webkit-backdrop-filter:blur(14px) saturate(135%);
   flex-shrink:0;
-  overflow-x:auto;
-  scrollbar-width:none;
 }
-.tabs::-webkit-scrollbar{display:none}
-.tab{
-  padding:12px 14px;
-  font-size:12px;
-  font-weight:500;
-  color:var(--gm);
-  cursor:pointer;
-  border-bottom:2px solid transparent;
-  white-space:nowrap;
-  transition:color .15s,border-color .15s;
-  font-family:var(--fh);
-}
-.tab:hover{color:var(--gt)}
-.tab.act{color:var(--ga);border-bottom-color:var(--ga)}
-.tab.pur{color:var(--gp)}
-.tab.pur.act{color:var(--gp);border-bottom-color:var(--gp)}
-.tab.cert{color:var(--kba-orange)}
-.tab.cert.act{border-bottom-color:var(--kba-orange)}
+.tab-groups{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-start}
+.tab-group{display:flex;align-items:center;gap:8px;padding:7px;border-radius:18px;background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.05);box-shadow:inset 0 1px 0 rgba(255,255,255,.02)}
+.tab-group-label{font-size:10px;font-family:var(--fm);text-transform:uppercase;letter-spacing:.12em;color:var(--gm);padding:0 8px 0 4px;white-space:nowrap}
+.tab-group-items{display:flex;gap:8px;flex-wrap:wrap}
+.tab{position:relative;display:flex;align-items:center;gap:7px;padding:10px 14px;font-size:12px;font-weight:600;color:var(--gm);cursor:pointer;white-space:nowrap;transition:all .18s ease;font-family:var(--fh);border-radius:999px;border:1px solid transparent;background:transparent;overflow:hidden}
+.tab::after{content:'';position:absolute;inset:-2px;border-radius:999px;opacity:0;transition:opacity .18s ease}
+.tab:hover{color:var(--gt);transform:translateY(-1px);background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.08)}
+.tab .ti{font-size:14px;line-height:1;opacity:.98}
+.tab .tl{line-height:1}
+@keyframes tabGlowPulse{0%,100%{box-shadow:0 0 0 1px rgba(92,184,92,.10) inset, 0 8px 20px rgba(0,0,0,.16), 0 0 0 rgba(92,184,92,0)}50%{box-shadow:0 0 0 1px rgba(92,184,92,.16) inset, 0 10px 24px rgba(0,0,0,.2), 0 0 22px rgba(92,184,92,.22)}}
+.tab.act{color:#f7fff7;background:linear-gradient(135deg, rgba(92,184,92,.18), rgba(92,184,92,.10));border-color:rgba(92,184,92,.30);animation:tabGlowPulse 2.2s ease-in-out infinite}
+.tab.act::after{opacity:1;background:radial-gradient(circle at 20% 50%, rgba(255,255,255,.12), transparent 45%)}
+.tab.pur{color:#d5c4f7}
+.tab.pur:hover{background:rgba(154,126,200,.11);border-color:rgba(154,126,200,.2)}
+.tab.pur.act{color:#f7f1ff;background:linear-gradient(135deg, rgba(154,126,200,.20), rgba(154,126,200,.10));border-color:rgba(154,126,200,.34);animation:tabGlowPulse 2.2s ease-in-out infinite;box-shadow:0 0 0 1px rgba(154,126,200,.08) inset, 0 8px 20px rgba(0,0,0,.18), 0 0 18px rgba(154,126,200,.18)}
+.tab.cert{color:#ffc07f}
+.tab.cert:hover{background:rgba(224,132,49,.12);border-color:rgba(224,132,49,.18)}
+.tab.cert.act{color:#fff5ec;background:linear-gradient(135deg, rgba(224,132,49,.22), rgba(224,132,49,.10));border-color:rgba(224,132,49,.32);animation:tabGlowPulse 2.2s ease-in-out infinite;box-shadow:0 0 0 1px rgba(224,132,49,.08) inset, 0 8px 20px rgba(0,0,0,.18), 0 0 18px rgba(224,132,49,.18)}
 .tab.amb{color:var(--gamb)}
-.tab.amb.act{border-bottom-color:var(--gamb)}
+.tab.amb.act{color:#fff8e8;background:linear-gradient(135deg, rgba(212,160,64,.18), rgba(212,160,64,.08));border-color:rgba(212,160,64,.3)}
+.tab-mobile-bar,.tab-drawer-overlay,.tab-drawer{display:none}
+body.light-mode .mh{background:rgba(234,244,234,.78);border-color:#b0c8b0}
+body.light-mode .tabs{background:rgba(240,247,240,.82);border-color:#d2e0d2}
+body.light-mode .tab-group{background:rgba(255,255,255,.55);border-color:rgba(0,0,0,.05)}
+body.light-mode .tab:hover{background:rgba(0,0,0,.04);border-color:rgba(0,0,0,.06)}
+body.light-mode .tab.act{color:#163218;background:linear-gradient(135deg, rgba(92,184,92,.16), rgba(92,184,92,.08));border-color:rgba(92,184,92,.28)}
+body.light-mode .tab.pur{color:#6b54a7}
+body.light-mode .tab.pur.act{color:#2d214d;background:linear-gradient(135deg, rgba(154,126,200,.18), rgba(154,126,200,.08));border-color:rgba(154,126,200,.3)}
+body.light-mode .tab.cert{color:#ad5b0f}
+body.light-mode .tab.cert.act{color:#4e2807;background:linear-gradient(135deg, rgba(224,132,49,.18), rgba(224,132,49,.08));border-color:rgba(224,132,49,.3)}
+@media (max-width: 820px){
+  .mh{padding:12px 14px 12px}
+  .mh-b{display:none}
+  .tabs{top:74px;padding:8px 12px 10px}
+  .tab-groups{display:none}
+  .tab-mobile-bar{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:4px 0 0}
+  .tab-mobile-current{min-width:0;display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:14px;background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.06);color:var(--gt);font-size:12px;font-weight:600;flex:1}
+  .tab-mobile-current .ti{font-size:15px}
+  .tab-mobile-current .meta{display:flex;flex-direction:column;min-width:0}
+  .tab-mobile-current .meta small{font-size:9px;font-family:var(--fm);color:var(--gm);text-transform:uppercase;letter-spacing:.08em}
+  .tab-mobile-trigger{display:flex;align-items:center;justify-content:center;width:42px;height:42px;border-radius:13px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.045);color:var(--gt);cursor:pointer;font-size:16px}
+  .tab-drawer-overlay.open{display:block;position:fixed;inset:0;background:rgba(0,0,0,.46);z-index:120;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}
+  .tab-drawer{position:fixed;top:0;right:-320px;bottom:0;width:300px;z-index:121;display:flex;flex-direction:column;background:rgba(10,18,12,.92);backdrop-filter:blur(16px) saturate(130%);-webkit-backdrop-filter:blur(16px) saturate(130%);border-left:1px solid rgba(255,255,255,.06);box-shadow:-16px 0 34px rgba(0,0,0,.35);transition:right .24s ease}
+  .tab-drawer.open{right:0}
+  .tab-drawer-head{display:flex;align-items:center;justify-content:space-between;padding:16px 16px 12px;border-bottom:1px solid rgba(255,255,255,.06)}
+  .tab-drawer-title{font-size:13px;font-weight:700;color:var(--gt)}
+  .tab-drawer-sub{font-size:9px;font-family:var(--fm);color:var(--gm);text-transform:uppercase;letter-spacing:.1em;margin-top:3px}
+  .tab-drawer-close{background:transparent;border:1px solid rgba(255,255,255,.08);color:var(--gt);width:36px;height:36px;border-radius:11px;cursor:pointer}
+  .tab-drawer-body{padding:14px;overflow:auto;display:flex;flex-direction:column;gap:14px}
+  .tab-drawer-group{display:flex;flex-direction:column;gap:8px}
+  .tab-drawer-group-label{font-size:9px;font-family:var(--fm);color:var(--gm);text-transform:uppercase;letter-spacing:.12em;padding:0 6px}
+  .tab-drawer-item{display:flex;align-items:center;gap:10px;padding:11px 12px;border-radius:14px;border:1px solid rgba(255,255,255,.06);background:rgba(255,255,255,.03);color:var(--gt);cursor:pointer;font-weight:600}
+  .tab-drawer-item.active{background:rgba(92,184,92,.14);border-color:rgba(92,184,92,.22);box-shadow:0 0 16px rgba(92,184,92,.16)}
+  .tab-drawer-item.pur.active{background:rgba(154,126,200,.16);border-color:rgba(154,126,200,.24);box-shadow:0 0 16px rgba(154,126,200,.16)}
+  .tab-drawer-item.cert.active{background:rgba(224,132,49,.16);border-color:rgba(224,132,49,.24);box-shadow:0 0 16px rgba(224,132,49,.16)}
+  .tab-drawer-item .ti{font-size:16px}
+  .content{padding:16px 14px 20px}
+}
 
 /* ── CONTENT AREA ── */
 .content{
@@ -1202,6 +1252,17 @@ body.light-mode .gene-list{background:#e8f0e8}
       <div class="mh-b" id="mhB"></div>
     </div>
     <div class="tabs" id="tabRow"></div>
+    <div class="tab-drawer-overlay" id="tabDrawerOverlay" onclick="closeTabDrawer()"></div>
+    <aside class="tab-drawer" id="tabDrawer">
+      <div class="tab-drawer-head">
+        <div>
+          <div class="tab-drawer-title">Sections</div>
+          <div class="tab-drawer-sub">Jump around this gecko profile</div>
+        </div>
+        <button class="tab-drawer-close" type="button" onclick="closeTabDrawer()">✕</button>
+      </div>
+      <div class="tab-drawer-body" id="tabDrawerBody"></div>
+    </aside>
     <div id="tabContent" class="content"></div>
     <div id="treeSec" class="tree-sec">
       <div class="tree-tb">
@@ -1623,55 +1684,89 @@ function initLogos(){
 }
 
 const COLS=['#6abf69','#8aacd4','#c4a24a','#c26060','#a78bd4','#6abfb8','#d4a86a','#8ad46a'];
-const LEO_GENES={
-  tremper_albino:{name:'Tremper Albino',short:'Trm Alb',type:'recessive',cat:'albino',color:'#c4a24a',allele:'ta'},
-  bell_albino:{name:'Bell Albino',short:'Bell Alb',type:'recessive',cat:'albino',color:'#d4a870',allele:'ba'},
-  rainwater_albino:{name:'Rainwater Albino',short:'Rain Alb',type:'recessive',cat:'albino',color:'#e0c090',allele:'ra'},
-  mack_snow:{name:'Mack Snow',short:'Mack Snow',type:'codominant',cat:'snow',color:'#8aacd4',allele:'ms'},
-  blizzard:{name:'Blizzard',short:'Blizzard',type:'recessive',cat:'pattern',color:'#b0c8e8',allele:'bz'},
-  eclipse:{name:'Eclipse',short:'Eclipse',type:'recessive',cat:'eye',color:'#a78bd4',allele:'ec'},
-  patternless:{name:'Patternless',short:'Ptrnless',type:'recessive',cat:'pattern',color:'#8faf93',allele:'pl'},
-  enigma:{name:'Enigma',short:'Enigma',type:'dominant',cat:'pattern',color:'#d4789a',allele:'en'},
-  giant:{name:'Giant',short:'Giant',type:'codominant',cat:'size',color:'#6abfb8',allele:'gi'},
-  lemon_frost:{name:'Lemon Frost',short:'Lemon Fst',type:'codominant',cat:'color',color:'#f0e060',allele:'lf'},
-  black_night:{name:'Black Night',short:'Blk Night',type:'recessive',cat:'color',color:'#8090a0',allele:'bn'},
-  bold_stripe:{name:'Bold Stripe',short:'Bold Str',type:'recessive',cat:'pattern',color:'#c4a24a',allele:'bs'},
-  jungle:{name:'Jungle',short:'Jungle',type:'recessive',cat:'pattern',color:'#6abf69',allele:'ju'},
-  murphy_patternless:{name:'Murphy Patternless',short:'Murphy Pl',type:'recessive',cat:'pattern',color:'#9fbf8f',allele:'mp'},
+// ── CRESTED GECKO GENES (only species supported) ──
+const GECKO_GENES={
+  // ── RECESSIVE — needs 2 copies to visually express ──
+  axanthic:{name:'Axanthic',short:'Axanthic',type:'recessive',cat:'color',color:'#9ab8d4',allele:'ax',
+    desc:'Confirmed recessive. Visual axanthics reduce yellow/red pigment and trend grayscale/cool toned.',supportsHet:true},
+
+  // ── INCOMPLETE DOMINANT / CO-DOMINANT ──
+  lilly_white:{name:'Lilly White',short:'Lilly Wht',type:'codominant',cat:'color',color:'#e8e8d8',allele:'lw',
+    desc:'Incomplete dominant. Single copy shows Lilly White. Super Lilly White is considered lethal/non-viable.',superLethal:true},
+  cappuccino:{name:'Cappuccino',short:'Cappuccino',type:'codominant',cat:'color',color:'#c8a070',allele:'cp',
+    desc:'Incomplete dominant. Single copy shows Cappuccino; super Cappuccino can occur from Capp × Capp pairings.'},
+
+  // ── POLYGENIC / LINE-BRED ──
+  tiger:{name:'Tiger',short:'Tiger',type:'polygenic',cat:'pattern',color:'#d4904a',allele:'ti',
+    desc:'Polygenic dark banding/striping pattern. Inheritable, but not predictable with Mendelian ratios.'},
+  flame:{name:'Flame',short:'Flame',type:'polygenic',cat:'pattern',color:'#d8a05a',allele:'fl',
+    desc:'Light dorsal pattern over a darker base.'},
+  harlequin:{name:'Harlequin',short:'Harlequin',type:'polygenic',cat:'pattern',color:'#d4904a',allele:'ha',
+    desc:'Lateral cream/yellow patterning over a darker base.'},
+  extreme_harlequin:{name:'Extreme Harlequin',short:'Ext Harl',type:'polygenic',cat:'pattern',color:'#e8a840',allele:'eh',
+    desc:'High-expression harlequin with heavier pattern coverage.'},
+  pinstripe:{name:'Pinstripe',short:'Pinstripe',type:'polygenic',cat:'pattern',color:'#c8b040',allele:'pi',
+    desc:'Raised dorsal scales forming a visible stripe along the back.'},
+  phantom_pinstripe:{name:'Phantom Pinstripe',short:'Phantom PS',type:'polygenic',cat:'pattern',color:'#a09060',allele:'pp',
+    desc:'Partial/incomplete pinstripe expression.'},
+  dalmatian:{name:'Dalmatian',short:'Dalmatian',type:'polygenic',cat:'pattern',color:'#c0b090',allele:'da',
+    desc:'Dark spots scattered across the body.'},
+  super_dalmatian:{name:'Super Dalmatian',short:'Super Dal',type:'polygenic',cat:'pattern',color:'#b09582',allele:'sd',
+    desc:'Very heavy dalmatian spotting. Line-bred/polygenic, not a simple single gene.'},
+  white_spot:{name:'White Spot',short:'Wht Spot',type:'polygenic',cat:'pattern',color:'#e0e0d0',allele:'ws',
+    desc:'White spots on the body, often seen alongside dalmatian projects.'},
+  quad_stripe:{name:'Quad Stripe',short:'Quad Stripe',type:'polygenic',cat:'pattern',color:'#a8c080',allele:'qs',
+    desc:'Four stripe look with strong dorsal/lateral striping.'},
+  empty_back:{name:'Empty Back',short:'Empty Back',type:'polygenic',cat:'pattern',color:'#8fb587',allele:'eb',
+    desc:'Reduced dorsal pattern between the pin/quad edges.'},
+  super_stripe:{name:'Super Stripe',short:'Super Stripe',type:'polygenic',cat:'pattern',color:'#95c98f',allele:'ss',
+    desc:'Stripe-project outcome often associated with stacked quad stripe and empty back expression.'},
+  brindle:{name:'Brindle',short:'Brindle',type:'polygenic',cat:'pattern',color:'#b07840',allele:'br',
+    desc:'Irregular mottled/marbled pattern.'},
+  white_wall:{name:'White Wall',short:'Wht Wall',type:'polygenic',cat:'pattern',color:'#d8d8c0',allele:'ww',
+    desc:'White lateral sides with patterned dorsum.'},
+  bicolor:{name:'Bi-color',short:'Bi-color',type:'polygenic',cat:'color',color:'#80a870',allele:'bc',
+    desc:'Two distinct color zones.'},
+  tricolor:{name:'Tri-color',short:'Tri-color',type:'polygenic',cat:'color',color:'#c07840',allele:'tr',
+    desc:'Three distinct color zones, often white/orange/dark.'},
+  cream_on_cream:{name:'Cream on Cream',short:'Crm/Crm',type:'polygenic',cat:'color',color:'#e8d8a0',allele:'cc',
+    desc:'Cream pattern on a cream base.'},
+  red_base:{name:'Red Base',short:'Red Base',type:'polygenic',cat:'color',color:'#d06040',allele:'rb',
+    desc:'Rich red/orange base coloration.'},
+  yellow_base:{name:'Yellow Base',short:'Yel Base',type:'polygenic',cat:'color',color:'#e8c040',allele:'yb',
+    desc:'Yellow base coloration.'},
+  orange:{name:'Orange',short:'Orange',type:'polygenic',cat:'color',color:'#e87030',allele:'or',
+    desc:'Strong orange coloration throughout.'},
+  lavender:{name:'Lavender',short:'Lavender',type:'polygenic',cat:'color',color:'#b39ad8',allele:'lv',
+    desc:'Lavender/purple-gray tone. Treated as a polygenic color trait, not a confirmed single gene.'},
+  buckskin:{name:'Buckskin',short:'Buckskin',type:'polygenic',cat:'color',color:'#c8a858',allele:'bk',
+    desc:'Tan/khaki base with reduced patterning.'},
+  moonglow:{name:'Moonglow',short:'Moonglow',type:'polygenic',cat:'color',color:'#e8e8d0',allele:'mg',
+    desc:'Very pale overall coloration with low contrast.'}
 };
-const CRESTIE_GENES={
-  axanthic:{name:'Axanthic',short:'Axanthic',type:'recessive',cat:'color',color:'#9ab8d4',allele:'ax'},
-  lilly_white:{name:'Lilly White',short:'Lilly Wht',type:'codominant',cat:'color',color:'#f0f0e0',allele:'lw'},
-  cappuccino:{name:'Cappuccino',short:'Cappuccino',type:'recessive',cat:'color',color:'#c8a070',allele:'cp'},
-  extreme_harlequin:{name:'Extreme Harlequin',short:'Ext Harl',type:'polygenic',cat:'pattern',color:'#e8a840',allele:'eh'},
-  harlequin:{name:'Harlequin',short:'Harlequin',type:'polygenic',cat:'pattern',color:'#d4904a',allele:'ha'},
-  dalmatian:{name:'Dalmatian',short:'Dalmatian',type:'polygenic',cat:'pattern',color:'#c0b090',allele:'da'},
-  white_wall:{name:'White Wall',short:'Wht Wall',type:'polygenic',cat:'pattern',color:'#d8d8c0',allele:'ww'},
-  pinstripe:{name:'Pinstripe',short:'Pinstripe',type:'polygenic',cat:'pattern',color:'#c8b040',allele:'pi'},
-  phantom_pinstripe:{name:'Phantom Pinstripe',short:'Phantom PS',type:'polygenic',cat:'pattern',color:'#a09060',allele:'pp'},
-  brindle:{name:'Brindle',short:'Brindle',type:'polygenic',cat:'pattern',color:'#b07840',allele:'br'},
-  bicolor:{name:'Bicolor',short:'Bicolor',type:'polygenic',cat:'color',color:'#80a870',allele:'bc'},
-  cream_on_cream:{name:'Cream on Cream',short:'CrOnCr',type:'polygenic',cat:'color',color:'#e8d8a0',allele:'cc'},
-  quad_stripe:{name:'Quad Stripe',short:'Quad Str',type:'polygenic',cat:'pattern',color:'#a8c080',allele:'qs'},
-  red_base:{name:'Red Base',short:'Red Base',type:'polygenic',cat:'color',color:'#d06040',allele:'rb'},
-  yellow_base:{name:'Yellow Base',short:'Yel Base',type:'polygenic',cat:'color',color:'#e8c040',allele:'yb'},
-  tricolor:{name:'Tricolor',short:'Tricolor',type:'polygenic',cat:'color',color:'#c07840',allele:'tr'},
+
+const GENE_CATS={
+  all:'All',
+  color:'Color',
+  pattern:'Pattern',
 };
-const GENE_SETS={leopard:'Leopard Gecko',crested:'Crested Gecko'};
+
+// Inheritance type descriptions for UI
+const INHERIT_INFO={
+  recessive:'Recessive — visual animals have 2 copies. Single copy animals are het carriers.',
+  codominant:'Incomplete dominant / co-dominant — 1 copy is visual, 2 copies may produce a super form. Lilly White super is considered lethal.',
+  dominant:'Dominant — 1 copy is enough to visually express.',
+  polygenic:'Polygenic — inheritable, but not truly predictable with Punnett-square math. Treat results as directional likelihood only.',
+};
+
 let customGenes={};
-let currentGeneSet='leopard';
-function getActiveGenes(){
-  const base=currentGeneSet==='crested'?{...CRESTIE_GENES}:{...LEO_GENES};
-  return{...base,...customGenes};
-}
-let GENES=getActiveGenes();
-const GCATS={all:'All',albino:'Albino',snow:'Snow',eye:'Eye',pattern:'Pattern',color:'Color',size:'Size'};
-const CRESTIE_CATS={all:'All',color:'Color',pattern:'Pattern'};
-function getActiveCats(){return currentGeneSet==='crested'?CRESTIE_CATS:GCATS;}
+function getActiveGenes(){return{...GECKO_GENES,...customGenes};}
+function getActiveCats(){return GENE_CATS;}
+function loadCustomGenes(){try{const d=localStorage.getItem('kba-custom-genes');if(d)customGenes=JSON.parse(d);}catch(e){}}
+function saveCustomGenes(){try{localStorage.setItem('kba-custom-genes',JSON.stringify(customGenes));}catch(e){}}
 function loadCustomGenes(){try{const d=localStorage.getItem('kba-custom-genes');if(d)customGenes=JSON.parse(d);}catch(e){}}
 function saveCustomGenes(){try{localStorage.setItem('kba-custom-genes',JSON.stringify(customGenes));}catch(e){}}
 
-const GENE_NAMES={tremper_albino:'Tremper Albino',bell_albino:'Bell Albino',rainwater_albino:'Rainwater Albino',mack_snow:'Mack Snow',blizzard:'Blizzard',eclipse:'Eclipse',patternless:'Patternless',enigma:'Enigma',giant:'Giant',lemon_frost:'Lemon Frost',black_night:'Black Night',bold_stripe:'Bold Stripe',jungle:'Jungle',murphy_patternless:'Murphy Patternless'};
 
 let geckos=[],selId=null,activeTab='overview';
 let tHov=null,tPan={x:0,y:0},tDrag=false,tDS={x:0,y:0},tPS={x:0,y:0};
@@ -1918,6 +2013,133 @@ document.addEventListener('DOMContentLoaded',()=>{
   }
 });
 
+function buildGenePickerProfile(g){
+  const GENES=getActiveGenes();
+  const owned=g.genes||[];
+  const cats=Object.entries(GENE_CATS).filter(([k])=>k!=='all');
+  
+  // Build gene pills for owned genes
+  const ownedHtml=owned.length?owned.map(gid=>{
+    const gene=GENES[gid];if(!gene)return'';
+    const typeColors={recessive:'#c26060',codominant:'#6aace8',dominant:'#e8a040',polygenic:'#8abf8a'};
+    const tc=typeColors[gene.type]||'#8abf8a';
+    return`<div style="display:flex;align-items:center;gap:6px;padding:7px 10px;background:var(--gc);border:1px solid ${tc}44;border-radius:7px;margin-bottom:5px">
+      <div style="width:10px;height:10px;border-radius:50%;background:${gene.color};flex-shrink:0"></div>
+      <div style="flex:1">
+        <div style="font-size:12px;font-weight:600;color:var(--gt)">${gene.name}</div>
+        <div style="font-size:9px;font-family:var(--fm);color:${tc};text-transform:uppercase;letter-spacing:.06em">${gene.type}</div>
+      </div>
+      <button onclick="toggleGeneOnGecko('${g.id}','${gid}',false)" style="background:transparent;border:1px solid rgba(194,96,96,.3);border-radius:4px;color:var(--gd);font-size:11px;padding:2px 8px;cursor:pointer">×</button>
+    </div>`;
+  }).join(''):'<div style="font-size:12px;color:var(--gm);padding:8px 0">No genes assigned yet</div>';
+
+  // Build category tabs + gene grid for adding
+  const catTabs=cats.map(([k,v])=>`<button onclick="filterGenePickerCat('${g.id}','${k}')" id="gpcat-${k}" style="padding:4px 10px;background:var(--gc);border:1px solid var(--gbr);border-radius:20px;font-size:11px;color:var(--gsu);cursor:pointer;font-family:var(--fh);transition:all .12s">${v}</button>`).join('');
+
+  const geneGrid=Object.entries(GENES).map(([gid,gene])=>{
+    const isOwned=owned.includes(gid);
+    const typeColors={recessive:'#c26060',codominant:'#6aace8',dominant:'#e8a040',polygenic:'#8abf8a'};
+    const tc=typeColors[gene.type]||'#8abf8a';
+    return`<div class="gp-gene-btn" data-cat="${gene.cat}" onclick="toggleGeneOnGecko('${g.id}','${gid}',${!isOwned})" 
+      style="padding:8px 10px;background:${isOwned?tc+'22':'var(--gc)'};border:1px solid ${isOwned?tc:tc+'44'};border-radius:7px;cursor:pointer;transition:all .12s;position:relative">
+      <div style="display:flex;align-items:center;gap:6px;margin-bottom:3px">
+        <div style="width:8px;height:8px;border-radius:50%;background:${gene.color};flex-shrink:0"></div>
+        <div style="font-size:12px;font-weight:600;color:var(--gt)">${gene.name}</div>
+        ${isOwned?`<span style="margin-left:auto;color:${tc};font-size:12px">✓</span>`:''}
+      </div>
+      <div style="font-size:9px;font-family:var(--fm);color:${tc};text-transform:uppercase;letter-spacing:.06em">${gene.type}</div>
+      ${gene.desc?`<div style="font-size:10px;color:var(--gm);margin-top:3px;line-height:1.3">${gene.desc}</div>`:''}
+    </div>`;
+  }).join('');
+
+  return`<div style="margin-top:16px">
+    <div class="sh"><div class="sl">Genetics</div></div>
+    
+    <div style="margin-bottom:12px">
+      <div style="font-size:10px;font-family:var(--fm);color:var(--gm);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px">Assigned genes</div>
+      <div id="gp-owned-${g.id}">${ownedHtml}</div>
+    </div>
+
+    <div style="background:var(--gs);border:1px solid var(--gbr);border-radius:10px;padding:14px">
+      <div style="font-size:10px;font-family:var(--fm);color:var(--gm);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px">Add / remove genes</div>
+      
+      <div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:10px" id="gp-cats-${g.id}">
+        <button onclick="filterGenePickerCat('${g.id}','all')" id="gpcat-all" style="padding:4px 10px;background:var(--ga);border:1px solid var(--ga);border-radius:20px;font-size:11px;color:#071507;font-weight:600;cursor:pointer;font-family:var(--fh)"">All</button>
+        ${catTabs}
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px" id="gp-grid-${g.id}">
+        ${geneGrid}
+      </div>
+
+      <div style="margin-top:12px;padding-top:10px;border-top:1px solid var(--gbr)">
+        <div style="font-size:9px;font-family:var(--fm);color:var(--gm);margin-bottom:6px;text-transform:uppercase;letter-spacing:.06em">Add custom gene</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          <input id="cg-pf-name-${g.id}" class="fi" placeholder="Gene name" style="flex:2;min-width:100px;font-size:12px;padding:7px 10px">
+          <select id="cg-pf-type-${g.id}" class="fi" style="flex:1;min-width:90px;font-size:12px;padding:7px 10px">
+            <option value="recessive">Recessive</option>
+            <option value="codominant">Co-dominant</option>
+            <option value="dominant">Dominant</option>
+            <option value="polygenic">Polygenic</option>
+          </select>
+          <button onclick="addCustomGeneFromProfile('${g.id}')" style="padding:7px 14px;background:rgba(106,191,105,.12);border:1px solid rgba(106,191,105,.3);border-radius:6px;color:var(--ga);font-size:12px;cursor:pointer;font-family:var(--fh);white-space:nowrap;font-weight:600">+ Add</button>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:10px;background:var(--gc);border-radius:7px;padding:10px 12px">
+      <div style="font-size:9px;font-family:var(--fm);color:var(--gm);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px">Inheritance guide</div>
+      ${Object.entries(INHERIT_INFO).map(([type,desc])=>{const tc={recessive:'#c26060',codominant:'#6aace8',dominant:'#e8a040',polygenic:'#8abf8a'}[type];return`<div style="display:flex;gap:7px;margin-bottom:5px;align-items:flex-start"><span style="padding:2px 7px;border-radius:10px;font-size:9px;font-family:var(--fm);background:${tc}22;color:${tc};border:1px solid ${tc}44;white-space:nowrap;margin-top:1px">${type}</span><div style="font-size:11px;color:var(--gsu);line-height:1.4">${desc}</div></div>`;}).join('')}
+    </div>
+  </div>`;
+}
+
+function toggleGeneOnGecko(gid, geneId, add){
+  const g=getG(gid);if(!g)return;
+  if(!g.genes)g.genes=[];
+  if(add){if(!g.genes.includes(geneId))g.genes.push(geneId);}
+  else{g.genes=g.genes.filter(x=>x!==geneId);}
+  save();
+  // Re-render the profile tab
+  const tc=document.getElementById('tabContent');
+  if(tc&&tc.style.display!=='none')tc.innerHTML=buildTab('profile');
+}
+
+function filterGenePickerCat(gid, cat){
+  const grid=document.getElementById(`gp-grid-${gid}`);
+  if(!grid)return;
+  grid.querySelectorAll('.gp-gene-btn').forEach(btn=>{
+    btn.style.display=(cat==='all'||btn.dataset.cat===cat)?'':'none';
+  });
+  // Update active cat button
+  const catContainer=document.getElementById(`gp-cats-${gid}`);
+  if(catContainer){
+    catContainer.querySelectorAll('button').forEach(btn=>{
+      const isActive=btn.id===`gpcat-${cat}`;
+      btn.style.background=isActive?'var(--ga)':'var(--gc)';
+      btn.style.borderColor=isActive?'var(--ga)':'var(--gbr)';
+      btn.style.color=isActive?'#071507':'var(--gsu)';
+      btn.style.fontWeight=isActive?'600':'400';
+    });
+  }
+}
+
+function addCustomGeneFromProfile(gid){
+  const nameEl=document.getElementById(`cg-pf-name-${gid}`);
+  const typeEl=document.getElementById(`cg-pf-type-${gid}`);
+  if(!nameEl||!typeEl)return;
+  const name=nameEl.value.trim();
+  if(!name){alert('Enter a gene name');return;}
+  const id='cg_'+name.toLowerCase().replace(/\s+/g,'_')+'_'+Date.now().toString().slice(-4);
+  const type=typeEl.value;
+  const typeColors={recessive:'#c26060',codominant:'#6aace8',dominant:'#e8a040',polygenic:'#8abf8a'};
+  customGenes[id]={name,short:name.slice(0,10),type,cat:'custom',color:typeColors[type]||'#8abf8a',allele:id.slice(0,3),desc:'Custom gene'};
+  saveCustomGenes();
+  nameEl.value='';
+  // Auto-assign to this gecko
+  toggleGeneOnGecko(gid, id, true);
+}
+
 function togglePass(inputId, btn){
   const inp = document.getElementById(inputId);
   if(!inp) return;
@@ -2150,6 +2372,25 @@ function updateStats(){
   const cur=document.getElementById(map[sexFilter]);if(cur)cur.classList.add('active-tab');
 }
 
+
+function avatarPlaceholder(color,small){
+  const sz=small?18:24;
+  return `<div class="avatar-ph" style="background:${color}22;color:${color}" aria-hidden="true">
+    <svg viewBox="0 0 24 24" width="${sz}" height="${sz}" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M6 8c0-1.1.9-2 2-2h1l1.2-1.4c.4-.4.9-.6 1.4-.6h.8c.5 0 1 .2 1.4.6L15 6h1c1.1 0 2 .9 2 2v8a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2z"/>
+      <circle cx="12" cy="12" r="3.2"/>
+      <path d="M7.5 9.5h.01"/>
+    </svg>
+  </div>`;
+}
+function currentTabMeta(){
+  for(const group of TAB_GROUPS){
+    const found=(group.tabs||[]).find(t=>t.id===activeTab);
+    if(found) return {group:group.label, ...found};
+  }
+  return {group:'Section',l:'Overview',i:'🏠'};
+}
+
 function renderSB(){
   const q=(document.getElementById('srch')?.value||'').toLowerCase();
   const list=document.getElementById('gList');list.innerHTML='';
@@ -2164,7 +2405,7 @@ function renderSB(){
     const nameCls=genderNameCls(g.sex);
     const d=document.createElement('div');
     d.className='gi'+(g.id===selId?' act':'');
-    const ph=g.photos&&g.photos.length?`<img src="${g.photos[0].data}">`:`${g.name.slice(0,2).toUpperCase()}`;
+    const ph=g.photos&&g.photos.length?`<img src="${g.photos[0].data}" alt="${g.name}">`:avatarPlaceholder(col,true);
     d.innerHTML=`<div class="gav" style="background:${col}22;color:${col}">${ph}</div><div><div class="gi-nm ${nameCls}">${g.name}</div><div class="gi-mo">${g.morph||'—'}</div></div>`;
     d.onclick=()=>{selId=g.id;tViewAll=false;renderSB();renderHeader();renderTabs();switchTab(activeTab);updateMobBar();closeSidebar();};
     list.appendChild(d);
@@ -2178,20 +2419,62 @@ function renderHeader(){
   document.getElementById('mhName').textContent=g.name;
   document.getElementById('mhSerial').textContent=g.serial?'#'+g.serial:'No serial';
   const col=ncol(g,false);
-  const ph=g.photos&&g.photos.length?`<div class="mh-av"><img src="${g.photos[0].data}"></div>`:`<div class="mh-av-ph" style="background:${col}22;color:${col}">${g.name.slice(0,2).toUpperCase()}</div>`;
+  const ph=g.photos&&g.photos.length?`<div class="mh-av"><img src="${g.photos[0].data}" alt="${g.name}"></div>`:`<div class="mh-av-ph">${avatarPlaceholder(col,false)}</div>`;
   document.getElementById('mh-av').innerHTML=ph;
   const sc={Male:'bdg-m',Female:'bdg-f',Unknown:'bdg-u'}[g.sex]||'bdg-u';
   const nameColor=g.sex==='Male'?'color:#7ab8e8':g.sex==='Female'?'color:#e88aaa':'color:var(--ga)';
   document.getElementById('mhName').style.cssText=nameColor;
   document.getElementById('mhB').innerHTML=`<span class="bdg ${sc}">${g.sex}</span>${g.morph?`<span class="bdg bdg-mo">${g.morph}</span>`:''}${g.gen?`<span class="bdg bdg-u">${g.gen}</span>`:''}`;
+  const avWrap=document.getElementById('mh-av');
+  if(avWrap){
+    avWrap.title='Click to upload a gecko photo';
+    avWrap.onclick=()=>document.getElementById('photoInput')?.click();
+  }
+  updateMobBar();
 }
 
-const TABS=[{id:'overview',l:'Overview'},{id:'weight',l:'Weight'},{id:'feeding',l:'Feeding'},{id:'shed',l:'Shed'},{id:'breeding',l:'Breeding'},{id:'eggs',l:'Eggs',cls:'cert'},{id:'health',l:'Health'},{id:'lineage',l:'Lineage'},{id:'genetics',l:'Genetics',cls:'pur'},{id:'certificate',l:'Certificate',cls:'cert'},{id:'profile',l:'Profile'}];
+function updateMobBar(){
+  const titleEl=document.getElementById('mobTitle');
+  const serialEl=document.getElementById('mobSerial');
+  const badgesEl=document.getElementById('mobBadges');
+  if(!titleEl||!serialEl||!badgesEl) return;
+  const g=getG();
+  const meta=currentTabMeta();
+  if(!g){
+    titleEl.textContent='KBA Geckos';
+    serialEl.textContent=meta.l;
+    badgesEl.innerHTML=`<span class="bdg bdg-u">${meta.group}</span>`;
+    return;
+  }
+  titleEl.textContent=g.name || 'KBA Geckos';
+  serialEl.textContent=(g.serial?('#'+g.serial+' · '):'') + meta.l;
+  const sexClass={Male:'bdg-m',Female:'bdg-f',Unknown:'bdg-u'}[g.sex] || 'bdg-u';
+  badgesEl.innerHTML=`<span class="bdg ${sexClass}">${g.sex||'Unknown'}</span>${g.morph?`<span class="bdg bdg-mo">${g.morph}</span>`:''}`;
+}
 
-function renderTabs(){document.getElementById('tabRow').innerHTML=TABS.map(t=>`<div class="tab${activeTab===t.id?' act':''}${t.cls?' '+t.cls:''}" onclick="switchTab('${t.id}')">${t.l}</div>`).join('');}
+const TAB_GROUPS=[
+  {label:'Animal',tabs:[{id:'overview',l:'Overview',i:'🏠'},{id:'profile',l:'Profile',i:'🦎'}]},
+  {label:'Care',tabs:[{id:'weight',l:'Weight',i:'⚖️'},{id:'feeding',l:'Feeding',i:'🪳'},{id:'shed',l:'Shed',i:'🧤'},{id:'health',l:'Health',i:'🩺'}]},
+  {label:'Breeding',tabs:[{id:'breeding',l:'Breeding',i:'💕'},{id:'eggs',l:'Eggs',i:'🥚',cls:'cert'},{id:'genetics',l:'Genetics',i:'🧬',cls:'pur'},{id:'lineage',l:'Lineage',i:'🌿'},{id:'certificate',l:'Certificate',i:'📜',cls:'cert'}]}
+];
+const TABS=TAB_GROUPS.flatMap(g=>g.tabs);
+function getTabMeta(id){return TABS.find(t=>t.id===id)||TABS[0];}
+function renderTabs(){
+  const row=document.getElementById('tabRow');
+  if(!row)return;
+  const groupsHtml=TAB_GROUPS.map(group=>`<div class="tab-group"><div class="tab-group-label">${group.label}</div><div class="tab-group-items">${group.tabs.map(t=>`<div class="tab${activeTab===t.id?' act':''}${t.cls?' '+t.cls:''}" onclick="switchTab('${t.id}')"><span class="ti">${t.i||''}</span><span class="tl">${t.l}</span></div>`).join('')}</div></div>`).join('');
+  const cur=getTabMeta(activeTab);
+  row.innerHTML=`<div class="tab-groups">${groupsHtml}</div><div class="tab-mobile-bar"><div class="tab-mobile-current ${cur.cls||''}"><span class="ti">${cur.i||''}</span><div class="meta"><small>Current section</small><span>${cur.l}</span></div></div><button class="tab-mobile-trigger" type="button" onclick="openTabDrawer()">☰</button></div>`;
+  const body=document.getElementById('tabDrawerBody');
+  if(body){
+    body.innerHTML=TAB_GROUPS.map(group=>`<div class="tab-drawer-group"><div class="tab-drawer-group-label">${group.label}</div>${group.tabs.map(t=>`<div class="tab-drawer-item${activeTab===t.id?' active':''}${t.cls?' '+t.cls:''}" onclick="switchTab('${t.id}')"><span class="ti">${t.i||''}</span><span>${t.l}</span></div>`).join('')}</div>`).join('');
+  }
+}
+function openTabDrawer(){const d=document.getElementById('tabDrawer'),o=document.getElementById('tabDrawerOverlay');if(d)d.classList.add('open');if(o)o.classList.add('open');}
+function closeTabDrawer(){const d=document.getElementById('tabDrawer'),o=document.getElementById('tabDrawerOverlay');if(d)d.classList.remove('open');if(o)o.classList.remove('open');}
 
 function switchTab(tab){
-  activeTab=tab;renderTabs();closeSidebar();
+  activeTab=tab;renderTabs();closeSidebar();closeTabDrawer();
   const tc=document.getElementById('tabContent'),ts=document.getElementById('treeSec'),cs=document.getElementById('calcSec'),cr=document.getElementById('certSec'),eg=document.getElementById('eggSec');
   [tc,ts,cs,cr,eg].forEach(el=>{if(el)el.style.display='none';});
   if(tab==='lineage'){ts.style.display='flex';buildSingleTree(selId);}
@@ -2234,7 +2517,9 @@ function bFD(g){const fds=(g.feedings||[]).slice().sort((a,b)=>new Date(b.date)-
 function bSH(g){const sh=(g.sheds||[]).slice().sort((a,b)=>new Date(b.date)-new Date(a.date));const rows=sh.map(s=>`<tr><td class="dim">${s.date}</td><td class="${s.comp==='complete'?'acc':s.comp==='retained'?'ref':''}">${s.comp}</td><td class="dim">${s.notes||'—'}</td></tr>`).join('')||'<tr><td colspan="3" class="empty" style="padding:14px">No entries yet</td></tr>';return`<div class="sh"><div class="sl">Shed Log</div><button class="ab" onclick="openMo('moSH')">+ Log Shed</button></div><table class="tbl"><thead><tr><th>Date</th><th>Completeness</th><th>Notes</th></tr></thead><tbody>${rows}</tbody></table>`;}
 function bBR(g){const br=(g.breedings||[]).slice().sort((a,b)=>new Date(b.date)-new Date(a.date));const sm={gravid:'stg',paired:'stp',hatched:'sth',eggs:'ste'};const cards=br.map(b=>`<div class="cbox"><div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px"><div><div class="pr-nm">${b.male} <span style="color:var(--gm)">×</span> ${b.female}</div><div class="pr-mt">${b.date}${b.clutch?' · '+b.clutch+' eggs':''}${b.hatchdate?' · Hatch: '+b.hatchdate:''}</div>${b.notes?`<div class="pr-mt">${b.notes}</div>`:''}</div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:5px"><span class="bdg ${sm[b.status]||'stp'}">${b.status}</span><div style="display:flex;gap:4px"><button class="ab pur" style="font-size:9px;padding:3px 7px" onclick='calcFromPairing(${JSON.stringify(b)})'>&#9884; Calc</button>${b.status==='hatched'?`<button class="ab" style="font-size:9px;padding:3px 7px;background:rgba(196,162,74,.1);border-color:rgba(196,162,74,.3);color:var(--gamb)" onclick='openBirthCert(${JSON.stringify(b)})'>&#129422; Birth Cert</button>`:''}</div></div></div></div>`).join('')||'<div class="empty">No pairing records yet</div>';return`<div class="sh"><div class="sl">Breeding Records</div><button class="ab" onclick="openMo('moBR')">+ Add Pairing</button></div>${cards}`;}
 function bHL(g){const ev=(g.health||[]).slice().sort((a,b)=>new Date(b.date)-new Date(a.date));const cards=ev.map(e=>`<div class="cbox"><div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px"><div><div style="font-size:11px;font-weight:500;margin-bottom:2px">${e.type}: ${e.desc}</div><div class="pr-mt">${e.date}${e.notes?' · '+e.notes:''}</div></div><span class="bdg ${e.status==='open'?'stg':'bdg-u'}">${e.status}</span></div></div>`).join('')||'<div class="empty">No health events</div>';return`<div class="sh"><div class="sl">Health Log</div><button class="ab" onclick="openMo('moHL')">+ Log Event</button></div>${cards}`;}
-function bPF(g){const fields=[['Name',g.name],['Serial',g.serial||'—'],['Sex',g.sex||'—'],['Morph',g.morph||'—'],['Hatch',g.hatch||'—'],['Gen',g.gen||'—'],['Species',g.species||'—'],['Breeder',g.breeder||'—'],['Father',(g.fatherId?getG(g.fatherId)?.name:null)||'External/Unknown'],['Mother',(g.motherId?getG(g.motherId)?.name:null)||'External/Unknown'],['Notes',g.notes||'—']];const photos=g.photos||[];const pcs=photos.map((p,i)=>`<img class="photo-thumb" src="${p.data}" onclick="openLb(${i})">`).join('');return`<div class="sh"><div class="sl">Photos</div><button class="ab" onclick="document.getElementById('photoInput').click()">+ Upload</button></div><div class="photo-grid">${pcs}<div class="photo-add" onclick="document.getElementById('photoInput').click()"><div style="font-size:18px">+</div><div>Add photo</div></div></div><div class="sh" style="margin-top:6px"><div class="sl">Details</div><button class="ab sec" onclick="openEP()">Edit</button></div><div class="pf-g">${fields.map(([l,v])=>`<div class="pf-f"><div class="pf-l">${l}</div><div class="pf-v">${v}</div></div>`).join('')}</div>`;}
+function bPF(g){const fields=[['Name',g.name],['Serial',g.serial||'—'],['Sex',g.sex||'—'],['Morph',g.morph||'—'],['Hatch',g.hatch||'—'],['Gen',g.gen||'—'],['Species',g.species||'—'],['Breeder',g.breeder||'—'],['Father',(g.fatherId?getG(g.fatherId)?.name:null)||'External/Unknown'],['Mother',(g.motherId?getG(g.motherId)?.name:null)||'External/Unknown'],['Notes',g.notes||'—']];const photos=g.photos||[];const pcs=photos.map((p,i)=>`<img class="photo-thumb" src="${p.data}" onclick="openLb(${i})">`).join('');const GENES=getActiveGenes();
+  const geneHtml=buildGenePickerProfile(g);
+  return`<div class="sh"><div class="sl">Photos</div><button class="ab" onclick="document.getElementById('photoInput').click()">+ Upload</button></div><div class="photo-grid">${pcs}<div class="photo-add" onclick="document.getElementById('photoInput').click()"><div style="font-size:18px">+</div><div>Add photo</div></div></div><div class="sh" style="margin-top:6px"><div class="sl">Details</div><button class="ab sec" onclick="openEP()">Edit</button></div><div class="pf-g">${fields.map(([l,v])=>`<div class="pf-f"><div class="pf-l">${l}</div><div class="pf-v">${v}</div></div>`).join('')}</div>${geneHtml}`;}
 
 function handlePhoto(e){const file=e.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=ev=>{const g=getG();if(!g)return;if(!g.photos)g.photos=[];g.photos.push({data:ev.target.result,date:td(),name:file.name});save();renderHeader();renderSB();switchTab('profile');};reader.readAsDataURL(file);e.target.value='';}
 function openLb(i){const g=getG();if(!g)return;const p=(g.photos||[])[i];if(!p)return;lbIdx=i;document.getElementById('lb-img').src=p.data;document.getElementById('lb-cap').textContent=p.date;document.getElementById('lb').classList.add('open');}
@@ -2289,7 +2574,7 @@ function renderCertGGrid(){
   const el=document.getElementById('certGGrid');if(!el)return;
   el.innerHTML=geckos.map((g,i)=>{
     const col=COLS[i%COLS.length];
-    const ph=g.photos&&g.photos.length?`<img src="${g.photos[0].data}">`:`${g.name.slice(0,2).toUpperCase()}`;
+    const ph=g.photos&&g.photos.length?`<img src="${g.photos[0].data}" alt="${g.name}">`:avatarPlaceholder(col,true);
     return`<div class="cgc${certSelId===g.id?' sel':''}" onclick="certSelId='${g.id}';updateCertGrid()">
       <div class="ck">&#10003;</div>
       <div class="cgc-av" style="background:${col}22;color:${col}">${ph}</div>
@@ -2324,7 +2609,7 @@ function generateCert(){
     '30':'This animal is sold with a 30-day health guarantee from the date of sale. Seller guarantees the animal to be in good health, eating, and free of visible parasites at time of transfer.',
     'none':'This animal is sold as-is with no health guarantee implied or expressed.'
   };
-  const genes=(g.genes||[]).map(gid=>GENE_NAMES[gid]||gid).filter(Boolean);
+  const genes=(g.genes||[]).map(gid=>getActiveGenes()[gid]?.name||gid).filter(Boolean);
   const certNum='KBA-'+Date.now().toString().slice(-6);
   const photoHTML=g.photos&&g.photos.length?`<img src="${g.photos[0].data}" alt="${g.name}">`:`<div class="cert-photo-ph">No photo<br>on file</div>`;
 
@@ -2440,47 +2725,40 @@ function openStandaloneCalc(){
 }
 function calcFromPairing(b){const dG=new Set(b.dadGenes||morphToGenes(b.male));const mG=new Set(b.momGenes||morphToGenes(b.female));cDG=dG;cMG=mG;cAC={dad:'all',mom:'all'};activeTab='genetics';renderTabs();['tabContent','treeSec','certSec'].forEach(id=>document.getElementById(id).style.display='none');document.getElementById('calcSec').style.display='block';renderCalcUI(b.male,b.female,false);setTimeout(runCalc,50);}
 function renderCalcUI(dL,mL,auto){
-  GENES=getActiveGenes();
+  const GENES=getActiveGenes();
   const males=geckos.filter(g=>g.sex==='Male');
   const females=geckos.filter(g=>g.sex==='Female');
   const cs=document.getElementById('calcSec');
   cs.innerHTML=`<div class="calc-page">
-    <div class="calc-hdr" style="margin-bottom:10px">
+    <div class="calc-hdr" style="margin-bottom:14px">
       <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap">
-        <div><h2 style="color:var(--gp)">&#9884; Genetics Calculator</h2><p style="font-family:var(--fm);font-size:9px;color:var(--gm)">Select species · choose parents · calculate offspring</p></div>
-        <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
-          <div style="display:flex;border:1px solid var(--gbr);border-radius:6px;overflow:hidden">
-            <button id="gs-leo" onclick="switchGeneSet('leopard')" style="padding:5px 10px;font-size:10px;font-family:var(--fm);cursor:pointer;border:none;transition:all .12s;background:${currentGeneSet==='leopard'?'rgba(106,191,105,.2)':'transparent'};color:${currentGeneSet==='leopard'?'var(--ga)':'var(--gsu)'}">Leopard</button>
-            <button id="gs-cre" onclick="switchGeneSet('crested')" style="padding:5px 10px;font-size:10px;font-family:var(--fm);cursor:pointer;border:none;border-left:1px solid var(--gbr);transition:all .12s;background:${currentGeneSet==='crested'?'rgba(196,162,74,.15)':'transparent'};color:${currentGeneSet==='crested'?'var(--gamb)':'var(--gsu)'}">Crested</button>
-          </div>
-          <button onclick="openCustomGeneManager()" style="padding:5px 10px;background:rgba(138,172,212,.08);border:1px solid rgba(138,172,212,.25);border-radius:6px;color:var(--gbl);font-size:10px;font-family:var(--fh);cursor:pointer">+ Custom genes</button>
+        <div>
+          <h2 style="color:var(--gp);font-size:18px;font-weight:700">&#9884; Genetics Calculator</h2>
+          <p style="font-family:var(--fm);font-size:10px;color:var(--gm);margin-top:3px">Pick parents from collection or add genes manually · calculate offspring probabilities</p>
         </div>
+        <button onclick="openCustomGeneManager()" style="padding:6px 12px;background:rgba(138,172,212,.1);border:1px solid rgba(138,172,212,.3);border-radius:6px;color:var(--gbl);font-size:11px;font-family:var(--fh);cursor:pointer;font-weight:500">+ Custom gene</button>
       </div>
     </div>
-    <div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:10px" id="qpRow"></div>
+    <div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:12px" id="qpRow"></div>
     <div class="calc-grid">
       <div class="pb">
-        <div class="pb-hdr"><div class="pb-lbl" style="color:#7ab8e8">${dL||'Father (Sire)'}</div><span class="pb-sex bdg-m">&#9794; Male</span></div>
-        <div style="margin-bottom:8px">
-          <select id="dad-pick" onchange="pickParent('dad',this.value)" style="width:100%;background:var(--gc);border:1px solid rgba(122,184,232,.3);border-radius:5px;padding:5px 8px;color:#7ab8e8;font-family:var(--fh);font-size:11px;outline:none">
-            <option value="">— Pick from collection —</option>
-            ${males.map(g=>`<option value="${g.id}">${g.name} · ${g.morph||'Unknown'}</option>`).join('')}
-            <option value="manual">Enter manually</option>
-          </select>
-        </div>
+        <div class="pb-hdr"><div class="pb-lbl" style="color:#6aace8">&#9794; ${dL||'Father (Sire)'}</div></div>
+        <select id="dad-pick" onchange="pickParent('dad',this.value)" style="width:100%;background:var(--gc);border:1px solid rgba(106,172,232,.3);border-radius:6px;padding:8px 10px;color:#6aace8;font-family:var(--fh);font-size:12px;outline:none;margin-bottom:10px">
+          <option value="">— Pick male from collection —</option>
+          ${males.map(g=>`<option value="${g.id}">${g.name}${g.morph?' · '+g.morph:''}</option>`).join('')}
+          <option value="manual">Enter genes manually</option>
+        </select>
         <div class="gene-pills" id="dp"></div>
         <button class="gadd" onclick="toggleGSel('dad')">+ Add gene</button>
         <div class="gsel" id="dsel"><div class="gs-cats" id="dcats"></div><div class="gene-list" id="dgl"></div></div>
       </div>
       <div class="pb">
-        <div class="pb-hdr"><div class="pb-lbl" style="color:#e88aaa">${mL||'Mother (Dam)'}</div><span class="pb-sex bdg-f">&#9792; Female</span></div>
-        <div style="margin-bottom:8px">
-          <select id="mom-pick" onchange="pickParent('mom',this.value)" style="width:100%;background:var(--gc);border:1px solid rgba(232,138,170,.3);border-radius:5px;padding:5px 8px;color:#e88aaa;font-family:var(--fh);font-size:11px;outline:none">
-            <option value="">— Pick from collection —</option>
-            ${females.map(g=>`<option value="${g.id}">${g.name} · ${g.morph||'Unknown'}</option>`).join('')}
-            <option value="manual">Enter manually</option>
-          </select>
-        </div>
+        <div class="pb-hdr"><div class="pb-lbl" style="color:#e88aaa">&#9792; ${mL||'Mother (Dam)'}</div></div>
+        <select id="mom-pick" onchange="pickParent('mom',this.value)" style="width:100%;background:var(--gc);border:1px solid rgba(232,138,170,.3);border-radius:6px;padding:8px 10px;color:#e88aaa;font-family:var(--fh);font-size:12px;outline:none;margin-bottom:10px">
+          <option value="">— Pick female from collection —</option>
+          ${females.map(g=>`<option value="${g.id}">${g.name}${g.morph?' · '+g.morph:''}</option>`).join('')}
+          <option value="manual">Enter genes manually</option>
+        </select>
         <div class="gene-pills" id="mp"></div>
         <button class="gadd" onclick="toggleGSel('mom')">+ Add gene</button>
         <div class="gsel" id="msel"><div class="gs-cats" id="mcats"></div><div class="gene-list" id="mgl"></div></div>
@@ -2489,6 +2767,7 @@ function renderCalcUI(dL,mL,auto){
     <button class="calc-btn" onclick="runCalc()">&#9884; Calculate Offspring Genetics</button>
     <div class="res-box" id="resBox">
       <div class="res-hdr"><div class="res-t">Offspring Outcomes</div><div class="res-c" id="resC"></div></div>
+      <div id="inheritLegend" style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px"></div>
       <div class="oc-grid" id="ocGrid"></div>
       <div id="punArea"></div>
       <div class="notes-b" id="notesB" style="display:none"><div class="notes-t">Notes</div><div class="notes-c" id="notesC"></div></div>
@@ -2499,14 +2778,7 @@ function renderCalcUI(dL,mL,auto){
   if(auto&&(cDG.size||cMG.size))setTimeout(runCalc,50);
 }
 
-function switchGeneSet(set){
-  currentGeneSet=set;
-  cDG=new Set();cMG=new Set();
-  GENES=getActiveGenes();
-  cAC={dad:'all',mom:'all'};
-  const g=selId?getG():null;
-  renderCalcUI(g&&g.sex==='Male'?g.name+' (sire)':'Father',null,false);
-}
+
 
 function pickParent(side,val){
   if(!val||val==='manual'){if(side==='dad')cDG=new Set();else cMG=new Set();renderGPills(side);return;}
@@ -2517,6 +2789,110 @@ function pickParent(side,val){
   const sel=document.getElementById(side==='dad'?'dsel':'msel');
   if(sel.classList.contains('open'))renderGList(side);
 }
+
+function toggleGSel(side){
+  const id=side==='dad'?'dsel':'msel';
+  const sel=document.getElementById(id);
+  if(!sel)return;
+  const willOpen=!sel.classList.contains('open');
+  document.querySelectorAll('.gsel').forEach(s=>s.classList.remove('open'));
+  if(willOpen){
+    sel.classList.add('open');
+    renderGList(side);
+  }
+}
+
+
+
+function removeGene(side,gid){
+  const set = side==='dad' ? cDG : cMG;
+  if(set.has(gid)) set.delete(gid);
+  if(side==='dad') cDG = new Set(set); else cMG = new Set(set);
+  renderGPills(side);
+  renderGList(side);
+}
+
+function toggleGeneSelect(side,gid){
+  const set = side==='dad' ? cDG : cMG;
+  if(set.has(gid)) set.delete(gid); else set.add(gid);
+  if(side==='dad') cDG = new Set(set); else cMG = new Set(set);
+  renderGPills(side);
+  renderGList(side);
+}
+
+function renderGList(side){
+  const catsEl=document.getElementById(side==='dad'?'dcats':'mcats');
+  const listEl=document.getElementById(side==='dad'?'dgl':'mgl');
+  if(!catsEl||!listEl) return;
+
+  const GENES=getActiveGenes();
+  const CATS=getActiveCats();
+  const selected = side==='dad' ? cDG : cMG;
+  const activeCat = cAC?.[side] || 'all';
+
+  const entries=Object.entries(GENES).sort((a,b)=>{
+    const ca=(a[1].cat||'zzz'), cb=(b[1].cat||'zzz');
+    if(ca!==cb) return ca.localeCompare(cb);
+    return (a[1].name||a[0]).localeCompare(b[1].name||b[0]);
+  });
+
+  const counts={all:entries.length};
+  entries.forEach(([,g])=>{
+    const cat=g.cat||'other';
+    counts[cat]=(counts[cat]||0)+1;
+  });
+
+  catsEl.innerHTML = Object.entries(CATS).map(([id,label])=>{
+    const active = id===activeCat;
+    return `<button type="button" class="gcat-btn ${active?'active':''}" data-side="${side}" data-cat="${id}" style="padding:4px 8px;border-radius:999px;border:1px solid ${active?'rgba(138,172,212,.5)':'rgba(46,68,51,.35)'};background:${active?'rgba(138,172,212,.12)':'rgba(18,28,21,.55)'};color:${active?'var(--gbl)':'var(--gm)'};font-size:10px;font-family:var(--fm);cursor:pointer">${label} <span style="opacity:.7">${counts[id]||0}</span></button>`;
+  }).join('');
+
+  const filtered = entries.filter(([,g])=>activeCat==='all' || (g.cat||'other')===activeCat);
+
+  if(!filtered.length){
+    listEl.innerHTML = `<div style="padding:10px 0;color:var(--gm);font-size:11px">No genes in this category.</div>`;
+    return;
+  }
+
+  listEl.innerHTML = filtered.map(([gid,g])=>{
+    const chosen = selected.has(gid);
+    const typeLabel = g.type==='codominant' ? 'Co-dom' : (g.type ? g.type[0].toUpperCase()+g.type.slice(1) : 'Trait');
+    return `<div class="grow" style="display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid rgba(46,68,51,.22)">
+      <div>
+        <div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap">
+          <span style="width:10px;height:10px;border-radius:50%;background:${g.color||'#6abf69'};display:inline-block;flex-shrink:0"></span>
+          <span style="font-size:12px;color:var(--gt)">${g.name||gid}</span>
+          <span style="padding:2px 6px;border-radius:999px;font-size:9px;font-family:var(--fm);letter-spacing:.04em;background:rgba(255,255,255,.04);color:var(--gm);border:1px solid rgba(255,255,255,.08)">${typeLabel}</span>
+        </div>
+        <div style="margin-top:4px;font-size:10px;line-height:1.35;color:var(--gm)">${g.desc||''}</div>
+      </div>
+      <button type="button" class="gpick-btn" data-side="${side}" data-gid="${gid}" aria-pressed="${chosen?'true':'false'}" style="padding:7px 12px;border-radius:999px;border:1px solid ${chosen?(g.color||'#6abf69')+'66':'rgba(46,68,51,.35)'};background:${chosen?(g.color||'#6abf69')+'1c':'rgba(18,28,21,.6)'};color:${chosen?(g.color||'#6abf69'):'var(--gt)'};font-size:10px;font-family:var(--fh);font-weight:600;cursor:pointer;white-space:nowrap">${chosen?'Selected':'Select Gene'}</button>
+    </div>`;
+  }).join('') + `<div style="padding-top:10px"><button type="button" class="gcustom-open" style="padding:6px 10px;border-radius:7px;border:1px solid rgba(138,172,212,.28);background:rgba(138,172,212,.08);color:var(--gbl);font-size:10px;font-family:var(--fh);cursor:pointer">Manage Custom Genes</button></div>`;
+}
+
+document.addEventListener('click', function(ev){
+  const catBtn = ev.target.closest('.gcat-btn');
+  if(catBtn){
+    const side = catBtn.dataset.side;
+    const cat = catBtn.dataset.cat || 'all';
+    if(side){ cAC[side]=cat; renderGList(side); }
+    return;
+  }
+
+  const geneBtn = ev.target.closest('.gpick-btn');
+  if(geneBtn){
+    const side = geneBtn.dataset.side;
+    const gid = geneBtn.dataset.gid;
+    if(side && gid) toggleGeneSelect(side,gid);
+    return;
+  }
+
+  const customBtn = ev.target.closest('.gcustom-open');
+  if(customBtn){
+    openCustomGeneManager();
+  }
+});
 
 function openCustomGeneManager(){
   const el=document.getElementById('customGeneMgr');if(!el)return;
@@ -2551,44 +2927,167 @@ function removeCustomGene(id){
 }
 
 
-function renderQPs(){const el=document.getElementById('qpRow');if(!el)return;const pairs=currentGeneSet==='crested'?[['Lilly White × Lilly White','lilly_white','lilly_white'],['Axanthic × Axanthic','axanthic','axanthic'],['Lilly White × Axanthic','lilly_white','axanthic'],['Dalmatian × Dalmatian','dalmatian','dalmatian']]:[['Tremper × Tremper','tremper_albino','tremper_albino'],['Mack Snow × Mack Snow','mack_snow','mack_snow'],['RAPTOR × Blizzard','tremper_albino,eclipse','blizzard'],['Giant × Giant','giant','giant']];pairs.forEach(([l,d,m])=>{const b=document.createElement('button');b.className='qp';b.textContent=l;b.onclick=()=>{cDG=new Set(d.split(','));cMG=new Set(m.split(','));renderGPills('dad');renderGPills('mom');runCalc();};el.appendChild(b);});}
-function toggleGSel(p){const sel=document.getElementById(p==='dad'?'dsel':'msel');const was=sel.classList.contains('open');document.querySelectorAll('.gsel').forEach(s=>s.classList.remove('open'));if(!was){sel.classList.add('open');renderGCats(p);renderGList(p);}}
-function renderGCats(p){const el=document.getElementById(p==='dad'?'dcats':'mcats');if(!el)return;const cats=getActiveCats();el.innerHTML=Object.entries(cats).map(([k,v])=>`<button class="gcat${cAC[p]===k?' act':''}" onclick="setGCat('${p}','${k}')">${v}</button>`).join('');}
-function setGCat(p,c){cAC[p]=c;renderGCats(p);renderGList(p);}
-function renderGList(p){const genes=p==='dad'?cDG:cMG;const cat=cAC[p];const el=document.getElementById(p==='dad'?'dgl':'mgl');if(!el)return;const tc={recessive:'type-rec',codominant:'type-cod',dominant:'type-dom'};const GENES=getActiveGenes();el.innerHTML=Object.entries(GENES).filter(([,g])=>cat==='all'||g.cat===cat).map(([gid,g])=>`<span class="gopt ${tc[g.type]||'type-rec'}${genes.has(gid)?' used':''}" style="border-color:${g.color}44;background:${g.color}18;color:${g.color}" onclick="${genes.has(gid)?'':'addGene(\''+p+'\',\''+gid+'\')'}">${g.name}</span>`).join('');}
-function addGene(p,gid){(p==='dad'?cDG:cMG).add(gid);renderGPills(p);renderGList(p);}
-function removeGene(p,gid){(p==='dad'?cDG:cMG).delete(gid);renderGPills(p);const sel=document.getElementById(p==='dad'?'dsel':'msel');if(sel.classList.contains('open'))renderGList(p);}
+function renderQPs(){
+  const el=document.getElementById('qpRow');if(!el)return;
+  const pairs=[
+    ['Lilly White × Cappuccino','lilly_white','cappuccino'],
+    ['Axanthic × Axanthic','axanthic','axanthic'],
+    ['Quad Stripe × Empty Back','quad_stripe','empty_back'],
+    ['Quad Stripe × Quad Stripe','quad_stripe','quad_stripe'],
+    ['Dalmatian × Super Dalmatian','dalmatian','super_dalmatian'],
+    ['Lavender × Dark Color Project','lavender','red_base'],
+  ];
+  el.innerHTML=pairs.map(([l,d,m])=>`<button class="qp" onclick="cDG=new Set(${JSON.stringify(d?[d]:[])});cMG=new Set(${JSON.stringify(m?[m]:[])});renderGPills('dad');renderGPills('mom')">${l}</button>`).join('');
+}
+
 function renderGPills(p){const genes=p==='dad'?cDG:cMG;const el=document.getElementById(p==='dad'?'dp':'mp');if(!el)return;const tc={recessive:'type-rec',codominant:'type-cod',dominant:'type-dom'};const GENES=getActiveGenes();el.innerHTML=[...genes].map(gid=>{const g=GENES[gid];if(!g)return'';return`<span class="gpill ${tc[g.type]||'type-rec'}" style="border-color:${g.color}44;background:${g.color}18;color:${g.color}">${g.short}<span class="rm" onclick="removeGene('${p}','${gid}')">×</span></span>`;}).join('');}
 function runCalc(){
   document.querySelectorAll('.gsel').forEach(s=>s.classList.remove('open'));
   const GENES=getActiveGenes();
-  const allG=[...new Set([...cDG,...cMG])];const rb=document.getElementById('resBox');if(!rb)return;
+  const allG=[...new Set([...cDG,...cMG])];
+  const rb=document.getElementById('resBox');if(!rb)return;
   if(!allG.length){rb.classList.remove('show');return;}
-  const rec=allG.filter(g=>GENES[g]?.type==='recessive'),cod=allG.filter(g=>GENES[g]?.type==='codominant'),dom=allG.filter(g=>GENES[g]?.type==='dominant'),poly=allG.filter(g=>GENES[g]?.type==='polygenic');
-  const outcomes=[];const notes=[];
-  rec.forEach(gid=>{const dH=cDG.has(gid),mH=cMG.has(gid);const g=GENES[gid];if(dH&&mH){outcomes.push({pct:25,name:g.name,genes:`${gid}/${gid}`,type:'recessive',color:g.color,vis:true});outcomes.push({pct:50,name:`Het ${g.name}`,genes:`${gid}/-`,type:'recessive',color:g.color,vis:false,het:true});outcomes.push({pct:25,name:'Normal',genes:'-/-',type:'recessive',color:'#4a6b50',vis:false});}else if(dH||mH){outcomes.push({pct:50,name:`Het ${g.name}`,genes:`${gid}/-`,type:'recessive',color:g.color,vis:false,het:true});outcomes.push({pct:50,name:'Normal (poss het)',genes:'-/-',type:'recessive',color:'#4a6b50',vis:false});notes.push(`${g.name}: one parent het — 50% het, 50% possible het.`);}});
-  cod.forEach(gid=>{const dH=cDG.has(gid),mH=cMG.has(gid);const g=GENES[gid];if(dH&&mH){outcomes.push({pct:25,name:`Super ${g.name}`,genes:`${gid}/${gid}`,type:'codominant',color:g.color,vis:true});outcomes.push({pct:50,name:g.name,genes:`${gid}/-`,type:'codominant',color:g.color,vis:true});outcomes.push({pct:25,name:'Normal',genes:'-/-',type:'codominant',color:'#4a6b50',vis:false});notes.push(`${g.name}: 25% Super, 50% ${g.name}, 25% Normal.`);}else if(dH||mH){outcomes.push({pct:50,name:g.name,genes:`${gid}/-`,type:'codominant',color:g.color,vis:true});outcomes.push({pct:50,name:'Normal',genes:'-/-',type:'codominant',color:'#4a6b50',vis:false});}});
-  dom.forEach(gid=>{if(cDG.has(gid)||cMG.has(gid)){const g=GENES[gid];outcomes.push({pct:50,name:g.name,genes:`${gid}/-`,type:'dominant',color:g.color,vis:true});outcomes.push({pct:50,name:'Normal',genes:'-/-',type:'dominant',color:'#4a6b50',vis:false});if(gid==='enigma')notes.push('Enigma: do not breed two Enigmas.');}});
-  poly.forEach(gid=>{
-    const dH=cDG.has(gid),mH=cMG.has(gid);const g=GENES[gid];
-    if(dH||mH){
-      outcomes.push({pct:50,name:g.name+' (possible)',genes:'polygenic',type:'polygenic',color:g.color,vis:true});
-      outcomes.push({pct:50,name:'Normal',genes:'polygenic',type:'polygenic',color:'#4a6b50',vis:false});
-      notes.push(g.name+': polygenic trait — offspring probability depends on selective breeding, not simple Mendelian ratios. 50% shown is approximate.');
+
+  const outcomes=[];
+  const notes=[];
+
+  // ── RECESSIVE ── need 2 copies to express; 1 copy = carrier (het)
+  // Cross possibilities based on what each parent carries:
+  const rec=allG.filter(g=>GENES[g]?.type==='recessive');
+  rec.forEach(gid=>{
+    const dH=cDG.has(gid), mH=cMG.has(gid);
+    const g=GENES[gid];
+    if(dH&&mH){
+      // Both parents visual (homozygous) — all offspring visual
+      outcomes.push({pct:100,name:g.name,label:'Visual '+g.name,genes:`${gid}/${gid}`,type:'recessive',color:g.color,vis:true});
+    } else if(dH||mH){
+      // One parent visual, one normal — 50% visual, 50% het
+      outcomes.push({pct:50,name:g.name,label:'Visual '+g.name,genes:`${gid}/${gid}`,type:'recessive',color:g.color,vis:true});
+      outcomes.push({pct:50,name:'Het '+g.name,label:'Het '+g.name+' (carrier)',genes:`${gid}/-`,type:'recessive',color:g.color+'88',vis:false});
+      notes.push(`${g.name}: 50% offspring visual, 50% het carriers. Hets look normal but carry one copy.`);
+    }
+    // If neither parent has it, gene doesn't appear in offspring
+  });
+
+  // ── CO-DOMINANT ── 1 copy = partial effect; 2 copies = super form
+  const cod=allG.filter(g=>GENES[g]?.type==='codominant');
+  cod.forEach(gid=>{
+    const dH=cDG.has(gid), mH=cMG.has(gid);
+    const g=GENES[gid];
+    if(dH&&mH){
+      // Both parents carry it
+      outcomes.push({pct:25,name:'Super '+g.name,label:'Super '+g.name,genes:`${gid}/${gid}`,type:'codominant',color:g.color,vis:true});
+      outcomes.push({pct:50,name:g.name,label:g.name,genes:`${gid}/-`,type:'codominant',color:g.color,vis:true});
+      outcomes.push({pct:25,name:'Normal (no '+g.name+')',label:'Normal',genes:'-/-',type:'codominant',color:'#4a6b50',vis:false});
+      notes.push(g.superLethal ? `${g.name}: 25% super form (typically non-viable / lethal), 50% single copy visual, 25% normal.` : `${g.name}: 25% super, 50% single copy visual, 25% normal.`);
+    } else if(dH||mH){
+      outcomes.push({pct:50,name:g.name,label:g.name+' (single copy)',genes:`${gid}/-`,type:'codominant',color:g.color,vis:true});
+      outcomes.push({pct:50,name:'Normal (no '+g.name+')',label:'Normal',genes:'-/-',type:'codominant',color:'#4a6b50',vis:false});
     }
   });
-  const merged={};outcomes.forEach(o=>{if(merged[o.name])merged[o.name].pct=Math.min(100,merged[o.name].pct);else merged[o.name]={...o};});
+
+  // ── DOMINANT ── 1 copy expresses; super form often lethal
+  const dom=allG.filter(g=>GENES[g]?.type==='dominant');
+  dom.forEach(gid=>{
+    const dH=cDG.has(gid), mH=cMG.has(gid);
+    const g=GENES[gid];
+    if(dH||mH){
+      outcomes.push({pct:50,name:g.name,label:g.name,genes:`${gid}/-`,type:'dominant',color:g.color,vis:true});
+      outcomes.push({pct:50,name:'Normal (no '+g.name+')',label:'Normal',genes:'-/-',type:'dominant',color:'#4a6b50',vis:false});
+      if(dH&&mH) notes.push(`${g.name}: Both parents carry dominant gene — potential super form offspring (~25%) may occur.`);
+    }
+  });
+
+  // ── POLYGENIC ── no simple ratio; selective breeding improves over generations
+  const poly=allG.filter(g=>GENES[g]?.type==='polygenic');
+  poly.forEach(gid=>{
+    const dH=cDG.has(gid), mH=cMG.has(gid);
+    const g=GENES[gid];
+    if(dH&&mH){
+      outcomes.push({pct:75,name:g.name+' (high chance)',label:g.name+' likely',genes:'polygenic',type:'polygenic',color:g.color,vis:true});
+      outcomes.push({pct:25,name:'Reduced '+g.name,label:'Reduced expression',genes:'polygenic',type:'polygenic',color:g.color+'88',vis:false});
+      notes.push(`${g.name}: Both parents express trait — high probability offspring will show it, with variable expression.`);
+    } else if(dH||mH){
+      outcomes.push({pct:50,name:g.name+' (possible)',label:g.name+' possible',genes:'polygenic',type:'polygenic',color:g.color,vis:true});
+      outcomes.push({pct:50,name:'No '+g.name,label:'Trait may not appear',genes:'polygenic',type:'polygenic',color:'#4a6b50',vis:false});
+      notes.push(`${g.name}: Polygenic — ~50% chance offspring inherit the trait but expression varies widely.`);
+    }
+  });
+
+  if((cDG.has('quad_stripe')||cMG.has('quad_stripe')) && (cDG.has('empty_back')||cMG.has('empty_back'))){
+    notes.push('Quad Stripe + Empty Back: strong stripe-project pairing. Super Stripe should be treated as a directional polygenic goal, not a fixed percentage outcome.');
+  }
+  if(cDG.has('lavender')||cMG.has('lavender')){
+    notes.push('Lavender is treated here as a polygenic color trait. It is inheritable, but not modeled as a recessive/dominant gene.');
+  }
+
+  // Render legend
+  const legendEl=document.getElementById('inheritLegend');
+  const usedTypes=[...new Set(allG.map(g=>GENES[g]?.type).filter(Boolean))];
+  const typeColors={recessive:'#c26060',codominant:'#6aace8',dominant:'#e8a040',polygenic:'#8abf8a'};
+  const typeLabels={recessive:'Recessive',codominant:'Co-dominant',dominant:'Dominant',polygenic:'Polygenic'};
+  if(legendEl) legendEl.innerHTML=usedTypes.map(t=>`<span style="padding:3px 9px;border-radius:20px;font-size:10px;font-family:var(--fm);background:${typeColors[t]}22;color:${typeColors[t]};border:1px solid ${typeColors[t]}44">${typeLabels[t]}</span>`).join('');
+
+  // Deduplicate outcomes
+  const merged={};
+  outcomes.forEach(o=>{
+    const key=o.label;
+    if(merged[key]) merged[key].pct=Math.min(100,Math.max(merged[key].pct,o.pct));
+    else merged[key]={...o};
+  });
   const final=Object.values(merged).sort((a,b)=>b.pct-a.pct);
-  const tl={recessive:'recessive',codominant:'co-dom',dominant:'dominant',polygenic:'polygenic'};
-  const tc2={recessive:'type-rec',codominant:'type-cod',dominant:'type-dom',polygenic:'type-lb'};
-  document.getElementById('resC').textContent=final.length+' possible outcomes';
-  document.getElementById('ocGrid').innerHTML=final.map(o=>`<div class="oc" style="border-color:${o.color}33"><div class="oc-bar" style="width:${o.pct}%;background:${o.color}"></div><div class="oc-pct" style="color:${o.color}">${o.pct}%</div><div class="oc-nm">${o.name}</div><div class="oc-g">${o.genes}</div><span class="oc-type ${tc2[o.type]||'type-rec'}">${tl[o.type]||o.type}</span>${o.het?'<div class="het-note">visual carrier</div>':''}</div>`).join('');
+
+  document.getElementById('resC').textContent=final.length+' possible outcome'+(final.length!==1?'s':'');
+  const typeCS={recessive:'type-rec',codominant:'type-cod',dominant:'type-dom',polygenic:'type-lb'};
+  document.getElementById('ocGrid').innerHTML=final.map(o=>`
+    <div class="oc ${typeCS[o.type]||''}" style="border-color:${o.color}44">
+      <div class="oc-bar" style="width:${o.pct}%;background:${o.color}"></div>
+      <div class="oc-pct" style="color:${o.color}">${o.pct}%</div>
+      <div class="oc-nm">${o.label}</div>
+      <div class="oc-type">${typeLabels[o.type]||o.type}</div>
+    </div>`).join('');
+
+  // Punnett square for single recessive pair
   const pa=document.getElementById('punArea');
-  if(rec.length===1&&cDG.has(rec[0])&&cMG.has(rec[0])){const g=GENES[rec[0]];const A=g.allele.toUpperCase();const r=g.allele;pa.innerHTML=`<div class="pun-wrap"><div class="pun-lbl">Punnett Square — ${g.name}</div><div class="punnett" style="grid-template-columns:36px repeat(2,1fr)"><div class="pc"></div><div class="pc pc-hdr">${A}${r}</div><div class="pc pc-hdr">${A}${r}</div><div class="pc pc-hdr">${A}${r}</div><div class="pc" style="background:${g.color}25;color:${g.color};border-radius:3px">${A}${A}<br><span style="font-size:8px;opacity:.7">${g.name}</span></div><div class="pc" style="background:${g.color}18;color:${g.color};border-radius:3px">${A}${r}<br><span style="font-size:8px;opacity:.7">Het</span></div><div class="pc pc-hdr">${A}${r}</div><div class="pc" style="background:${g.color}18;color:${g.color};border-radius:3px">${A}${r}<br><span style="font-size:8px;opacity:.7">Het</span></div><div class="pc" style="background:#4a6b5018;color:#4a6b50;border-radius:3px">${r}${r}<br><span style="font-size:8px;opacity:.7">Normal</span></div></div></div>`;}else pa.innerHTML='';
+  if(rec.length===1&&(cDG.has(rec[0])||cMG.has(rec[0]))){
+    const g=GENES[rec[0]];
+    const A=g.allele.toUpperCase();const r=g.allele;
+    const dadAlleles=cDG.has(rec[0])?[A,A]:[A,r];
+    const momAlleles=cMG.has(rec[0])?[A,A]:[A,r];
+    // Relabel for het vs visual context
+    const dA1=cDG.has(rec[0])?A:r, dA2=cDG.has(rec[0])?A:A;
+    const mA1=cMG.has(rec[0])?A:r, mA2=cMG.has(rec[0])?A:A;
+    const cells=[[dA1+mA1,dA1+mA2],[dA2+mA1,dA2+mA2]];
+    const isVis=allele=>allele[0]===allele[1]&&allele[0]===allele[0].toUpperCase();
+    const isHet=allele=>allele[0]!==allele[1];
+    pa.innerHTML=`<div class="pun-wrap"><div class="pun-lbl">Punnett Square — ${g.name}</div>
+      <div class="pun-grid" style="grid-template-columns:repeat(3,64px)">
+        <div class="ck"></div><div class="ck">${mA1}</div><div class="ck">${mA2}</div>
+        <div class="ck">${dA1}</div>
+        <div class="pc" style="background:${isVis(cells[0][0])?g.color+'33':isHet(cells[0][0])?g.color+'18':'var(--gs)'}">${cells[0][0]}</div>
+        <div class="pc" style="background:${isVis(cells[0][1])?g.color+'33':isHet(cells[0][1])?g.color+'18':'var(--gs)'}">${cells[0][1]}</div>
+        <div class="ck">${dA2}</div>
+        <div class="pc" style="background:${isVis(cells[1][0])?g.color+'33':isHet(cells[1][0])?g.color+'18':'var(--gs)'}">${cells[1][0]}</div>
+        <div class="pc" style="background:${isVis(cells[1][1])?g.color+'33':isHet(cells[1][1])?g.color+'18':'var(--gs)'}">${cells[1][1]}</div>
+      </div>
+      <div style="display:flex;gap:10px;margin-top:8px;flex-wrap:wrap">
+        <div style="display:flex;align-items:center;gap:5px;font-size:10px;color:var(--gsu)"><div style="width:14px;height:14px;border-radius:3px;background:${g.color}33;border:1px solid ${g.color}66"></div>Visual</div>
+        <div style="display:flex;align-items:center;gap:5px;font-size:10px;color:var(--gsu)"><div style="width:14px;height:14px;border-radius:3px;background:${g.color}18;border:1px solid ${g.color}44"></div>Het (carrier)</div>
+        <div style="display:flex;align-items:center;gap:5px;font-size:10px;color:var(--gsu)"><div style="width:14px;height:14px;border-radius:3px;background:var(--gs);border:1px solid var(--gbr)"></div>Normal</div>
+      </div>
+    </div>`;
+  } else {
+    pa.innerHTML='';
+  }
+
   const nb=document.getElementById('notesB');const nc=document.getElementById('notesC');
-  if(notes.length){nb.style.display='block';nc.innerHTML=notes.map(n=>`<div style="margin-bottom:3px">· ${n}</div>`).join('');}else nb.style.display='none';
-  rb.classList.add('show');rb.scrollIntoView({behavior:'smooth',block:'nearest'});
+  if(notes.length){nb.style.display='block';nc.innerHTML=notes.map(n=>`<div style="margin-bottom:5px;padding:6px 0;border-bottom:1px solid rgba(46,68,51,.25)">· ${n}</div>`).join('');}
+  else nb.style.display='none';
+
+  rb.classList.add('show');
+  rb.scrollIntoView({behavior:'smooth',block:'nearest'});
 }
+
 
 // LINEAGE
 const NW=120,NH=50,HG=40,VG=68;
