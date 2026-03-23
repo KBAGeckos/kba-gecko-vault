@@ -2506,7 +2506,8 @@ function bOV(g){
   (g.weights||[]).forEach(w=>all.push({date:w.date,lbl:`Weighed ${parseFloat(w.weight).toFixed(1)}g`,col:'#8aacd4'}));
   all.sort((a,b)=>new Date(b.date)-new Date(a.date));
   const acts=all.slice(0,6).map(a=>`<div class="act-row"><div class="adot" style="background:${a.col}"></div><div class="al">${a.lbl}</div><div class="ad">${a.date}</div></div>`).join('')||'<div class="empty">No activity yet</div>';
-  const geneList=(g.genes||[]).map(gid=>{const gn=GENES[gid];return gn?`<span class="gpill type-rec" style="border-color:${gn.color}44;background:${gn.color}18;color:${gn.color}">${gn.short}</span>`:''}).join('');
+  const geneDefs=getActiveGenes();
+  const geneList=(g.genes||[]).map(gid=>{const gn=geneDefs[gid];return gn?`<span class="gpill type-rec" style="border-color:${gn.color}44;background:${gn.color}18;color:${gn.color}">${gn.short}</span>`:''}).join('');
   return`<div class="sg"><div class="sc"><div class="sc-l">Weight</div><div><span class="sc-v">${lat?parseFloat(lat.weight).toFixed(1):'—'}</span><span class="sc-u">g</span></div>${dlt!==null?`<div class="sc-d ${parseFloat(dlt)>=0?'dup':'ddn'}">${parseFloat(dlt)>=0?'+':''}${dlt}g</div>`:''}</div><div class="sc"><div class="sc-l">Age</div><div class="sc-v">${age.v}<span class="sc-u">${age.u}</span></div></div><div class="sc"><div class="sc-l">Last Fed</div><div class="sc-v">${dago!==null?dago:'—'}<span class="sc-u">${dago!==null?'d':''}</span></div></div><div class="sc"><div class="sc-l">Logs</div><div class="sc-v">${(g.weights||[]).length+(g.feedings||[]).length+(g.sheds||[]).length}</div></div></div>
   ${geneList?`<div class="sh"><div class="sl">Known genes</div></div><div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:12px">${geneList}</div>`:''}
   <div class="cht-w"><div class="sl" style="margin-bottom:7px">Weight trend</div>${ch}</div>
@@ -3517,16 +3518,21 @@ function editEgg(gid,eggId){
 // egg listeners handled in login DOMContentLoaded
 
 
+
+// ── STATIC PWA ASSETS ──
+// Uses root-level manifest and icons for Cloudflare/GitHub static hosting.
+
 load();
 
 // ── PWA SERVICE WORKER ──
-if('serviceWorker' in navigator){
-  window.addEventListener('load',()=>{
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
     navigator.serviceWorker.register('/sw.js')
-      .then(reg=>console.log('SW registered'))
-      .catch(err=>console.log('SW failed:',err));
+      .then(() => console.log('SW registered'))
+      .catch(err => console.error('SW failed:', err));
   });
 }
+
 
 // ── PWA INSTALL PROMPT ──
 let deferredPrompt=null;
