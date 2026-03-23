@@ -14,8 +14,8 @@
 <meta name="application-name" content="KBA Geckos">
 <meta name="theme-color" content="#0d1210">
 <meta name="description" content="KBA Geckos — Gecko breeding management app">
-<link rel="manifest" href="/manifest.json">
-<link rel="apple-touch-icon" href="/icon-192.png">
+<link rel="manifest" id="dynamic-manifest">
+<link rel="apple-touch-icon" id="dynamic-apple-icon">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Mono:wght@400;500&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
@@ -1501,7 +1501,7 @@ body.light-mode .gene-list{background:#e8f0e8}
   <div class="mo-a"><button class="bc" onclick="closeMo('moChangePass')">Cancel</button><button class="bs" onclick="saveChangePassword()">Save</button></div>
 </div></div>
 
-<input type="file" id="photoInput" accept="image/*" style="display:none" onchange="handlePhoto(event)">
+<input type="file" id="photoInput" accept="image/*" multiple style="display:none" onchange="handlePhoto(event)">
 
 <div class="mo" id="moBirthCert"><div class="mo-b" style="width:480px;max-height:92vh;overflow-y:auto">
   <div class="mo-t" style="display:flex;align-items:center;justify-content:space-between">
@@ -2522,7 +2522,68 @@ function bPF(g){const fields=[['Name',g.name],['Serial',g.serial||'—'],['Sex',
   const geneHtml=buildGenePickerProfile(g);
   return`<div class="sh"><div class="sl">Photos</div><button class="ab" onclick="document.getElementById('photoInput').click()">+ Upload</button></div><div class="photo-grid">${pcs}<div class="photo-add" onclick="document.getElementById('photoInput').click()"><div style="font-size:18px">+</div><div>Add photo</div></div></div><div class="sh" style="margin-top:6px"><div class="sl">Details</div><button class="ab sec" onclick="openEP()">Edit</button></div><div class="pf-g">${fields.map(([l,v])=>`<div class="pf-f"><div class="pf-l">${l}</div><div class="pf-v">${v}</div></div>`).join('')}</div>${geneHtml}`;}
 
-function handlePhoto(e){const file=e.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=ev=>{const g=getG();if(!g)return;if(!g.photos)g.photos=[];g.photos.push({data:ev.target.result,date:td(),name:file.name});save();renderHeader();renderSB();switchTab('profile');};reader.readAsDataURL(file);e.target.value='';}
+
+const PHOTO_MAX_DIM=1200;
+const PHOTO_QUALITY=.74;
+const PHOTO_TYPE='image/jpeg';
+function resizePhotoFile(file){
+  return new Promise((resolve,reject)=>{
+    if(!file || !file.type || !file.type.startsWith('image/')){reject(new Error('Invalid image file'));return;}
+    const fr=new FileReader();
+    fr.onload=ev=>{
+      const img=new Image();
+      img.onload=()=>{
+        let w=img.width||0,h=img.height||0;
+        if(!w||!h){reject(new Error('Could not read image dimensions'));return;}
+        const scale=Math.min(1,PHOTO_MAX_DIM/Math.max(w,h));
+        const tw=Math.max(1,Math.round(w*scale));
+        const th=Math.max(1,Math.round(h*scale));
+        const canvas=document.createElement('canvas');
+        canvas.width=tw; canvas.height=th;
+        const ctx=canvas.getContext('2d',{alpha:false});
+        ctx.fillStyle='#ffffff';
+        ctx.fillRect(0,0,tw,th);
+        ctx.drawImage(img,0,0,tw,th);
+        const data=canvas.toDataURL(PHOTO_TYPE,PHOTO_QUALITY);
+        resolve({data,width:tw,height:th,originalWidth:w,originalHeight:h,originalBytes:file.size,compressedBytes:Math.round((data.length*3)/4),name:(file.name||'photo').replace(/\.[^.]+$/,'')+'.jpg',type:PHOTO_TYPE});
+      };
+      img.onerror=()=>reject(new Error('Image load failed'));
+      img.src=ev.target.result;
+    };
+    fr.onerror=()=>reject(new Error('File read failed'));
+    fr.readAsDataURL(file);
+  });
+}
+async function handlePhoto(e){
+  const files=[...(e.target.files||[])];
+  e.target.value='';
+  if(!files.length)return;
+  const g=getG();
+  if(!g)return;
+  if(!g.photos)g.photos=[];
+  let added=0,savedBytes=0,failed=0;
+  for(const file of files){
+    try{
+      const photo=await resizePhotoFile(file);
+      savedBytes+=Math.max(0,(photo.originalBytes||0)-(photo.compressedBytes||0));
+      g.photos.push({data:photo.data,date:td(),name:photo.name,type:photo.type,w:photo.width,h:photo.height,ow:photo.originalWidth,oh:photo.originalHeight});
+      added++;
+    }catch(err){
+      console.warn('Photo processing failed:',err);
+      failed++;
+    }
+  }
+  if(!added && failed){alert('Photo upload failed. Please try a smaller JPG or PNG image.');return;}
+  save();
+  renderHeader();
+  renderSB();
+  switchTab('profile');
+  try{updateStorageUI&&updateStorageUI();}catch(_){}
+  const kb=Math.round(savedBytes/1024);
+  const msg='✓ Added '+added+' compressed photo'+(added!==1?'s':'')+(kb>0?' · saved ~'+kb+' KB':'')+(failed?' · '+failed+' failed':'');
+  try{logRestore('<span class="log-ok">'+msg+'</span>');}catch(_){}
+}
+
 function openLb(i){const g=getG();if(!g)return;const p=(g.photos||[])[i];if(!p)return;lbIdx=i;document.getElementById('lb-img').src=p.data;document.getElementById('lb-cap').textContent=p.date;document.getElementById('lb').classList.add('open');}
 function closeLb(){document.getElementById('lb').classList.remove('open');lbIdx=null;}
 function delPhoto(){if(lbIdx===null)return;const g=getG();if(!g)return;if(!confirm('Delete?'))return;g.photos.splice(lbIdx,1);save();closeLb();renderHeader();renderSB();switchTab('profile');}
@@ -3518,20 +3579,41 @@ function editEgg(gid,eggId){
 // egg listeners handled in login DOMContentLoaded
 
 
-
-// ── STATIC PWA ASSETS ──
-// Uses root-level manifest and icons for Cloudflare/GitHub static hosting.
+// ── DYNAMIC MANIFEST / ICONS ──
+(function setupDynamicPWAAssets(){
+  const svg = encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+    <rect width="512" height="512" rx="96" fill="#0d1210"/>
+    <rect x="56" y="56" width="400" height="400" rx="72" fill="#151c19" stroke="#7c3aed" stroke-width="12"/>
+    <text x="50%" y="44%" dominant-baseline="middle" text-anchor="middle" font-family="Arial, sans-serif" font-size="154" font-weight="700" fill="#f3a7ba">KB</text>
+    <text x="50%" y="66%" dominant-baseline="middle" text-anchor="middle" font-family="Arial, sans-serif" font-size="64" font-weight="600" fill="#e5e7eb">Geckos</text>
+  </svg>`);
+  const iconUrl = `data:image/svg+xml;charset=UTF-8,${svg}`;
+  const manifest = {
+    name: "KBA Geckos",
+    short_name: "KBA Geckos",
+    start_url: "/",
+    display: "standalone",
+    background_color: "#0d1210",
+    theme_color: "#0d1210",
+    description: "KBA Geckos — Gecko breeding management app",
+    icons: [
+      { src: iconUrl, sizes: "192x192", type: "image/svg+xml", purpose: "any" },
+      { src: iconUrl, sizes: "512x512", type: "image/svg+xml", purpose: "any" }
+    ]
+  };
+  const manifestBlob = new Blob([JSON.stringify(manifest)], {type:'application/manifest+json'});
+  const manifestUrl = URL.createObjectURL(manifestBlob);
+  const man = document.getElementById('dynamic-manifest');
+  if(man) man.href = manifestUrl;
+  const apple = document.getElementById('dynamic-apple-icon');
+  if(apple) apple.href = iconUrl;
+})();
 
 load();
 
 // ── PWA SERVICE WORKER ──
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js')
-      .then(() => console.log('SW registered'))
-      .catch(err => console.error('SW failed:', err));
-  });
-}
+// Disabled in this single-file build unless a real /sw.js is deployed.
+// This prevents the unsupported MIME type error when /sw.js falls back to HTML.
 
 
 // ── PWA INSTALL PROMPT ──
