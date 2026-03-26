@@ -2529,16 +2529,12 @@ function bFD(g){const fds=(g.feedings||[]).slice().sort((a,b)=>new Date(b.date)-
 function bSH(g){const sh=(g.sheds||[]).slice().sort((a,b)=>new Date(b.date)-new Date(a.date));const rows=sh.map(s=>`<tr><td class="dim">${s.date}</td><td class="${s.comp==='complete'?'acc':s.comp==='retained'?'ref':''}">${s.comp}</td><td class="dim">${s.notes||'—'}</td></tr>`).join('')||'<tr><td colspan="3" class="empty" style="padding:14px">No entries yet</td></tr>';return`<div class="sh"><div class="sl">Shed Log</div><button class="ab" onclick="openMo('moSH')">+ Log Shed</button></div><table class="tbl"><thead><tr><th>Date</th><th>Completeness</th><th>Notes</th></tr></thead><tbody>${rows}</tbody></table>`;}
 function bBR(g){const br=(g.breedings||[]).slice().sort((a,b)=>new Date(b.date)-new Date(a.date));const sm={gravid:'stg',paired:'stp',hatched:'sth',eggs:'ste'};const cards=br.map(b=>`<div class="cbox"><div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px"><div><div class="pr-nm">${b.male} <span style="color:var(--gm)">×</span> ${b.female}</div><div class="pr-mt">${b.date}${b.clutch?' · '+b.clutch+' eggs':''}${b.hatchdate?' · Hatch: '+b.hatchdate:''}</div>${b.notes?`<div class="pr-mt">${b.notes}</div>`:''}</div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:5px"><span class="bdg ${sm[b.status]||'stp'}">${b.status}</span><div style="display:flex;gap:4px"><button class="ab pur" style="font-size:9px;padding:3px 7px" onclick='calcFromPairing(${JSON.stringify(b)})'>&#9884; Calc</button>${b.status==='hatched'?`<button class="ab" style="font-size:9px;padding:3px 7px;background:rgba(196,162,74,.1);border-color:rgba(196,162,74,.3);color:var(--gamb)" onclick='openBirthCert(${JSON.stringify(b)})'>&#129422; Birth Cert</button>`:''}</div></div></div></div>`).join('')||'<div class="empty">No pairing records yet</div>';return`<div class="sh"><div class="sl">Breeding Records</div><button class="ab" onclick="openMo('moBR')">+ Add Pairing</button></div>${cards}`;}
 function bHL(g){const ev=(g.health||[]).slice().sort((a,b)=>new Date(b.date)-new Date(a.date));const cards=ev.map(e=>`<div class="cbox"><div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px"><div><div style="font-size:11px;font-weight:500;margin-bottom:2px">${e.type}: ${e.desc}</div><div class="pr-mt">${e.date}${e.notes?' · '+e.notes:''}</div></div><span class="bdg ${e.status==='open'?'stg':'bdg-u'}">${e.status}</span></div></div>`).join('')||'<div class="empty">No health events</div>';return`<div class="sh"><div class="sl">Health Log</div><button class="ab" onclick="openMo('moHL')">+ Log Event</button></div>${cards}`;}
-function bPF(g){const fields=[['Name',g.name],['Serial',g.serial||'—'],['Sex',g.sex||'—'],['Morph',g.morph||'—'],['Hatch',g.hatch||'—'],['Gen',g.gen||'—'],['Species',g.species||'—'],['Breeder',g.breeder||'—'],['Father',(g.fatherId?getG(g.fatherId)?.name:null)||'External/Unknown'],['Mother',(g.motherId?getG(g.motherId)?.name:null)||'External/Unknown'],['Notes',g.notes||'—']];const photos=g.photos||[];const pcs=photos.map((p,i)=>`<img class="photo-thumb" src="${p.data}" onclick="openLb(${i})">`).join('');const GENES=getActiveGenes();
+function bPF(g){const fields=[['Name',g.name],['Serial',g.serial||'—'],['Sex',g.sex||'—'],['Morph',g.morph||'—'],['Hatch',g.hatch||'—'],['Gen',g.gen||'—'],['Species',g.species||'—'],['Breeder',g.breeder||'—'],['Father',(g.fatherId?getG(g.fatherId)?.name:null)||'External/Unknown'],['Mother',(g.motherId?getG(g.motherId)?.name:null)||'External/Unknown'],['Notes',g.notes||'—']];const photos=g.photos||[];const pcs=photos.map((p,i)=>`<img class="photo-thumb" src="${p.url || p.data || ""}" onclick="openLb(${i})">`).join('');const GENES=getActiveGenes();
   const geneHtml=buildGenePickerProfile(g);
   return`<div class="sh"><div class="sl">Photos</div><button class="ab" onclick="document.getElementById('photoInput').click()">+ Upload</button></div><div class="photo-grid">${pcs}<div class="photo-add" onclick="document.getElementById('photoInput').click()"><div style="font-size:18px">+</div><div>Add photo</div></div></div><div class="sh" style="margin-top:6px"><div class="sl">Details</div><button class="ab sec" onclick="openEP()">Edit</button></div><div class="pf-g">${fields.map(([l,v])=>`<div class="pf-f"><div class="pf-l">${l}</div><div class="pf-v">${v}</div></div>`).join('')}</div>${geneHtml}`;}
 
 
-const PHOTO_MAX_DIM=1200;
-const PHOTO_QUALITY=.74;
-const PHOTO_TYPE='image/jpeg';
-function resizePhotoFile(file){
-  async function uploadPhotoFile(file){
+async function uploadPhotoFile(file){
   if(!file || !file.type || !file.type.startsWith('image/')){
     throw new Error('Invalid image file');
   }
@@ -2568,14 +2564,8 @@ function resizePhotoFile(file){
     size: file.size
   };
 }
+
 async function handlePhoto(e){
-  const files=[...(e.target.files||[])];
-  e.target.value='';
-  if(!files.length)return;
-  const g=getG();
-  if(!g)return;
-  if(!g.photos)g.photos=[];
-  async function handlePhoto(e){
   const files = [...(e.target.files || [])];
   e.target.value = '';
   if(!files.length) return;
@@ -2589,7 +2579,6 @@ async function handlePhoto(e){
   for(const file of files){
     try{
       const photo = await uploadPhotoFile(file);
-
       g.photos.push({
         url: photo.url,
         key: photo.key,
@@ -2598,7 +2587,6 @@ async function handlePhoto(e){
         type: photo.type,
         size: photo.size
       });
-
       added++;
     }catch(err){
       console.warn('Photo upload failed:', err);
@@ -2606,40 +2594,21 @@ async function handlePhoto(e){
     }
   }
 
-  save();
-  renderHeader();
-  renderSB();
-  switchTab('profile');
-}
-  for(const file of files){
-    try{
-     const photo = await uploadPhotoFile(file);
-g.photos.push({
-  url: photo.url,
-  key: photo.key,
-  date: td(),
-  name: photo.name,
-  type: photo.type,
-  size: photo.size
-});
-      added++;
-    }catch(err){
-      console.warn('Photo processing failed:',err);
-      failed++;
-    }
+  if(!added && failed){
+    alert('Photo upload failed. Please try again.');
+    return;
   }
-  if(!added && failed){alert('Photo upload failed. Please try a smaller JPG or PNG image.');return;}
+
   save();
   renderHeader();
   renderSB();
   switchTab('profile');
   try{updateStorageUI&&updateStorageUI();}catch(_){}
-  const kb=Math.round(savedBytes/1024);
-  const msg='✓ Added '+added+' compressed photo'+(added!==1?'s':'')+(kb>0?' · saved ~'+kb+' KB':'')+(failed?' · '+failed+' failed':'');
+  const msg='✓ Added '+added+' photo'+(added!==1?'s':'')+(failed?' · '+failed+' failed':'');
   try{logRestore('<span class="log-ok">'+msg+'</span>');}catch(_){}
 }
 
-function openLb(i){const g=getG();if(!g)return;const p=(g.photos||[])[i];if(!p)return;lbIdx=i;document.getElementById('lb-img').src=p.url || p.data;document.getElementById('lb-cap').textContent=p.date;document.getElementById('lb').classList.add('open');}
+function openLb(i){const g=getG();if(!g)return;const p=(g.photos||[])[i];if(!p)return;lbIdx=i;document.getElementById('lb-img').src=p.url || p.data || '';document.getElementById('lb-cap').textContent=p.date;document.getElementById('lb').classList.add('open');}
 function closeLb(){document.getElementById('lb').classList.remove('open');lbIdx=null;}
 function delPhoto(){if(lbIdx===null)return;const g=getG();if(!g)return;if(!confirm('Delete?'))return;g.photos.splice(lbIdx,1);save();closeLb();renderHeader();renderSB();switchTab('profile');}
 document.getElementById('lb').addEventListener('click',e=>{if(e.target===document.getElementById('lb'))closeLb();});
