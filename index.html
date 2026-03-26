@@ -2575,12 +2575,53 @@ async function handlePhoto(e){
   const g=getG();
   if(!g)return;
   if(!g.photos)g.photos=[];
-  let added=0,savedBytes=0,failed=0;
+  async function handlePhoto(e){
+  const files = [...(e.target.files || [])];
+  e.target.value = '';
+  if(!files.length) return;
+
+  const g = getG();
+  if(!g) return;
+  if(!g.photos) g.photos = [];
+
+  let added = 0, failed = 0;
+
   for(const file of files){
     try{
-      const photo=await resizePhotoFile(file);
-      savedBytes+=Math.max(0,(photo.originalBytes||0)-(photo.compressedBytes||0));
-      g.photos.push({data:photo.data,date:td(),name:photo.name,type:photo.type,w:photo.width,h:photo.height,ow:photo.originalWidth,oh:photo.originalHeight});
+      const photo = await uploadPhotoFile(file);
+
+      g.photos.push({
+        url: photo.url,
+        key: photo.key,
+        date: td(),
+        name: photo.name,
+        type: photo.type,
+        size: photo.size
+      });
+
+      added++;
+    }catch(err){
+      console.warn('Photo upload failed:', err);
+      failed++;
+    }
+  }
+
+  save();
+  renderHeader();
+  renderSB();
+  switchTab('profile');
+}
+  for(const file of files){
+    try{
+     const photo = await uploadPhotoFile(file);
+g.photos.push({
+  url: photo.url,
+  key: photo.key,
+  date: td(),
+  name: photo.name,
+  type: photo.type,
+  size: photo.size
+});
       added++;
     }catch(err){
       console.warn('Photo processing failed:',err);
@@ -2598,7 +2639,7 @@ async function handlePhoto(e){
   try{logRestore('<span class="log-ok">'+msg+'</span>');}catch(_){}
 }
 
-function openLb(i){const g=getG();if(!g)return;const p=(g.photos||[])[i];if(!p)return;lbIdx=i;document.getElementById('lb-img').src=p.data;document.getElementById('lb-cap').textContent=p.date;document.getElementById('lb').classList.add('open');}
+function openLb(i){const g=getG();if(!g)return;const p=(g.photos||[])[i];if(!p)return;lbIdx=i;document.getElementById('lb-img').src=p.url || p.data;document.getElementById('lb-cap').textContent=p.date;document.getElementById('lb').classList.add('open');}
 function closeLb(){document.getElementById('lb').classList.remove('open');lbIdx=null;}
 function delPhoto(){if(lbIdx===null)return;const g=getG();if(!g)return;if(!confirm('Delete?'))return;g.photos.splice(lbIdx,1);save();closeLb();renderHeader();renderSB();switchTab('profile');}
 document.getElementById('lb').addEventListener('click',e=>{if(e.target===document.getElementById('lb'))closeLb();});
