@@ -2538,32 +2538,35 @@ const PHOTO_MAX_DIM=1200;
 const PHOTO_QUALITY=.74;
 const PHOTO_TYPE='image/jpeg';
 function resizePhotoFile(file){
-  return new Promise((resolve,reject)=>{
-    if(!file || !file.type || !file.type.startsWith('image/')){reject(new Error('Invalid image file'));return;}
-    const fr=new FileReader();
-    fr.onload=ev=>{
-      const img=new Image();
-      img.onload=()=>{
-        let w=img.width||0,h=img.height||0;
-        if(!w||!h){reject(new Error('Could not read image dimensions'));return;}
-        const scale=Math.min(1,PHOTO_MAX_DIM/Math.max(w,h));
-        const tw=Math.max(1,Math.round(w*scale));
-        const th=Math.max(1,Math.round(h*scale));
-        const canvas=document.createElement('canvas');
-        canvas.width=tw; canvas.height=th;
-        const ctx=canvas.getContext('2d',{alpha:false});
-        ctx.fillStyle='#ffffff';
-        ctx.fillRect(0,0,tw,th);
-        ctx.drawImage(img,0,0,tw,th);
-        const data=canvas.toDataURL(PHOTO_TYPE,PHOTO_QUALITY);
-        resolve({data,width:tw,height:th,originalWidth:w,originalHeight:h,originalBytes:file.size,compressedBytes:Math.round((data.length*3)/4),name:(file.name||'photo').replace(/\.[^.]+$/,'')+'.jpg',type:PHOTO_TYPE});
-      };
-      img.onerror=()=>reject(new Error('Image load failed'));
-      img.src=ev.target.result;
-    };
-    fr.onerror=()=>reject(new Error('File read failed'));
-    fr.readAsDataURL(file);
+  async function uploadPhotoFile(file){
+  if(!file || !file.type || !file.type.startsWith('image/')){
+    throw new Error('Invalid image file');
+  }
+
+  const formData = new FormData();
+  formData.append('file', file);
+
+  const res = await fetch('https://gecko-photos.eric-scott2632.workers.dev/upload', {
+    method: 'POST',
+    headers: {
+      Authorization: 'Bearer kba_gecko_upload_9f3b2c7a1d8e4f6a'
+    },
+    body: formData
   });
+
+  if(!res.ok){
+    throw new Error('Upload failed: ' + res.status);
+  }
+
+  const data = await res.json();
+
+  return {
+    url: data.url,
+    key: data.key,
+    name: file.name || 'photo',
+    type: file.type,
+    size: file.size
+  };
 }
 async function handlePhoto(e){
   const files=[...(e.target.files||[])];
