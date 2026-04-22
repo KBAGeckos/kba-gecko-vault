@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Profiles – FamCal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&family=Nunito+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/main.css">
+<link rel="stylesheet" href="../css/weather.css">
+<style>
+.profiles-grid{display:flex;flex-direction:column;gap:10px;padding:14px}
+.profile-card{background:rgba(10,18,40,0.82);backdrop-filter:blur(14px);border-radius:18px;border:1px solid rgba(255,255,255,0.1);padding:16px;display:flex;align-items:center;gap:16px}
+.profile-avatar-wrap{position:relative;flex-shrink:0;cursor:pointer}
+.profile-avatar{width:68px;height:68px;border-radius:50%;object-fit:cover;display:block}
+.profile-avatar-initials{width:68px;height:68px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:800;color:white}
+.avatar-edit-badge{position:absolute;bottom:2px;right:2px;width:22px;height:22px;border-radius:50%;background:#6366f1;border:2px solid #0f172a;display:flex;align-items:center;justify-content:center;font-size:11px;pointer-events:none}
+.profile-info{flex:1;min-width:0}
+.profile-name{font-family:'Nunito',sans-serif;font-weight:800;font-size:17px;color:#fff;margin-bottom:4px}
+.color-dot{width:22px;height:22px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:transform .15s,border-color .15s;flex-shrink:0}
+.color-dot:hover{transform:scale(1.15)}
+.color-dot.selected{border-color:white;transform:scale(1.1)}
+.photo-btn{font-size:11px;font-weight:700;padding:5px 12px;border-radius:10px;border:none;cursor:pointer;font-family:'Nunito Sans',sans-serif;transition:background .15s;white-space:nowrap}
+.photo-btn.upload{background:#6366f1;color:white}
+.photo-btn.upload:hover{background:#4f46e5}
+.photo-btn.remove{background:rgba(244,63,94,0.15);color:#f43f5e}
+.photo-btn.remove:hover{background:rgba(244,63,94,0.28)}
+.hidden-input{display:none}
+.tip-card{background:rgba(99,102,241,0.12);border:1px solid rgba(99,102,241,0.25);border-radius:14px;padding:12px 16px;margin:0 14px 14px;font-size:12px;color:rgba(255,255,255,0.65);line-height:1.6}
+.tip-card strong{color:#a5b4fc}
+.success-toast{position:fixed;bottom:70px;left:50%;transform:translateX(-50%) translateY(20px);background:#16a34a;color:white;padding:10px 20px;border-radius:20px;font-size:13px;font-weight:700;font-family:'Nunito',sans-serif;opacity:0;transition:all .3s;pointer-events:none;z-index:999;white-space:nowrap}
+.success-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ===== CROP MODAL ===== */
+.crop-modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:200;flex-direction:column;align-items:center;justify-content:center}
+.crop-modal-overlay.open{display:flex}
+.crop-modal{background:#1a2540;border-radius:20px;width:min(92vw,400px);overflow:hidden;border:1px solid rgba(255,255,255,0.15)}
+.crop-header{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid rgba(255,255,255,0.1)}
+.crop-title{font-family:'Nunito',sans-serif;font-weight:800;font-size:16px;color:#fff}
+.crop-close{width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,0.1);border:none;color:white;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center}
+.crop-hint{font-size:12px;color:rgba(255,255,255,0.5);text-align:center;padding:10px 16px 0}
+.crop-viewport{position:relative;width:240px;height:240px;margin:14px auto;border-radius:50%;overflow:hidden;border:3px solid #6366f1;cursor:grab;user-select:none;flex-shrink:0;touch-action:none}
+.crop-viewport:active{cursor:grabbing}
+.crop-img{position:absolute;transform-origin:top left}
+.crop-zoom-row{display:flex;align-items:center;gap:10px;padding:0 18px 10px}
+.crop-zoom-label{font-size:12px;color:rgba(255,255,255,0.5);flex-shrink:0}
+.crop-zoom-slider{flex:1}
+.crop-actions{display:flex;gap:10px;padding:12px 18px 16px;border-top:1px solid rgba(255,255,255,0.1)}
+.crop-cancel{flex:1;padding:11px;border-radius:11px;background:rgba(255,255,255,0.08);border:none;color:rgba(255,255,255,0.7);font-size:14px;font-weight:700;cursor:pointer;font-family:inherit}
+.crop-save{flex:2;padding:11px;border-radius:11px;background:#6366f1;border:none;color:white;font-size:14px;font-weight:800;cursor:pointer;font-family:'Nunito',sans-serif}
+.crop-save:hover{background:#4f46e5}
+</style>
+</head>
+<body class="weather-partly-cloudy">
+<div id="weather-bg" class="weather-bg">
+  <div class="weather-layer" id="weather-layer"></div>
+  <div class="weather-overlay"></div>
+</div>
+
+<header class="page-header">
+  <a href="../index.html" class="back-btn">‹</a>
+  <div class="page-title">👤 Family Profiles</div>
+</header>
+
+<div class="tip-card">
+  <strong>Tap the 📷 badge</strong> to upload a photo, then <strong>drag to reposition</strong> and use the zoom slider to get the perfect crop.
+</div>
+
+<div class="profiles-grid" id="profiles-grid"></div>
+
+<!-- Crop Modal -->
+<div class="crop-modal-overlay" id="crop-overlay">
+  <div class="crop-modal">
+    <div class="crop-header">
+      <div class="crop-title">Adjust Photo</div>
+      <button class="crop-close" onclick="closeCrop()">✕</button>
+    </div>
+    <div class="crop-hint">Drag to reposition · Pinch or use slider to zoom</div>
+    <div class="crop-viewport" id="crop-viewport">
+      <img class="crop-img" id="crop-img" draggable="false">
+    </div>
+    <div class="crop-zoom-row">
+      <span class="crop-zoom-label">Zoom</span>
+      <input type="range" class="crop-zoom-slider" id="crop-zoom" min="0.5" max="3" step="0.01" value="1">
+    </div>
+    <div class="crop-actions">
+      <button class="crop-cancel" onclick="closeCrop()">Cancel</button>
+      <button class="crop-save" onclick="saveCrop()">Use This Photo</button>
+    </div>
+  </div>
+</div>
+
+<div class="success-toast" id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="../js/supabase-config.js"></script>
+<script src="../js/data.js"></script>
+<script src="../js/db.js"></script>
+<script src="../js/gcal.js"></script>
+<script src="../js/weather.js"></script>
+<script>
+setWeatherBg('partly-cloudy', true);
+
+const COLOR_OPTIONS = [
+  '#16a34a','#0d9488','#2563eb','#7c3aed','#374151',
+  '#e11d48','#ea580c','#ca8a04','#0891b2','#9333ea',
+  '#be185d','#15803d','#1d4ed8','#6366f1','#64748b',
+];
+
+// ===== CROP STATE =====
+let cropMemberId = null;
+let cropOriginalSrc = null;
+let cropX = 0, cropY = 0, cropScale = 1;
+let isDragging = false;
+let dragStartX, dragStartY, dragStartImgX, dragStartImgY;
+let lastPinchDist = null;
+
+function renderProfiles() {
+  const grid = document.getElementById('profiles-grid');
+  grid.innerHTML = '';
+  const colorOverrides = JSON.parse(localStorage.getItem('fc_color_overrides') || '{}');
+  FAMILY_MEMBERS.forEach(m => { if (colorOverrides[m.id]) m.color = colorOverrides[m.id]; });
+
+  FAMILY_MEMBERS.filter(m => m.id !== 'family').forEach(m => {
+    const photo = AvatarStore.getPhoto(m.id);
+    const card = document.createElement('div');
+    card.className = 'profile-card';
+
+    // Avatar
+    const avatarWrap = document.createElement('div');
+    avatarWrap.className = 'profile-avatar-wrap';
+    avatarWrap.title = 'Tap to change photo';
+    avatarWrap.onclick = () => document.getElementById('file-' + m.id).click();
+
+    if (photo) {
+      const img = document.createElement('img');
+      img.className = 'profile-avatar';
+      img.src = photo;
+      img.alt = m.name;
+      avatarWrap.appendChild(img);
+    } else {
+      const initDiv = document.createElement('div');
+      initDiv.className = 'profile-avatar-initials';
+      initDiv.style.background = m.color;
+      initDiv.textContent = m.initials;
+      avatarWrap.appendChild(initDiv);
+    }
+
+    const badge = document.createElement('div');
+    badge.className = 'avatar-edit-badge';
+    badge.textContent = '📷';
+    avatarWrap.appendChild(badge);
+
+    const fileInput = document.createElement('input');
+    fileInput.type = 'file';
+    fileInput.accept = 'image/*';
+    fileInput.id = 'file-' + m.id;
+    fileInput.className = 'hidden-input';
+    fileInput.onchange = (e) => handlePhotoUpload(e, m.id);
+    avatarWrap.appendChild(fileInput);
+
+    // Info
+    const info = document.createElement('div');
+    info.className = 'profile-info';
+
+    const nameDiv = document.createElement('div');
+    nameDiv.className = 'profile-name';
+    nameDiv.textContent = m.name;
+    info.appendChild(nameDiv);
+
+    const colorLabel = document.createElement('div');
+    colorLabel.style.cssText = 'font-size:10px;color:rgba(255,255,255,0.4);font-weight:700;margin-bottom:4px;margin-top:4px';
+    colorLabel.textContent = 'Color theme:';
+    info.appendChild(colorLabel);
+
+    const colorRow = document.createElement('div');
+    colorRow.style.cssText = 'display:flex;gap:4px;flex-wrap:wrap';
+    COLOR_OPTIONS.forEach(clr => {
+      const dot = document.createElement('div');
+      dot.className = 'color-dot' + (m.color === clr ? ' selected' : '');
+      dot.style.background = clr;
+      dot.onclick = () => changeColor(m.id, clr);
+      colorRow.appendChild(dot);
+    });
+    info.appendChild(colorRow);
+
+    // Actions
+    const actions = document.createElement('div');
+    actions.style.cssText = 'display:flex;flex-direction:column;gap:6px;align-items:flex-end;flex-shrink:0';
+
+    const uploadBtn = document.createElement('button');
+    uploadBtn.className = 'photo-btn upload';
+    uploadBtn.textContent = photo ? '📷 Change' : '📷 Add Photo';
+    uploadBtn.onclick = () => document.getElementById('file-' + m.id).click();
+    actions.appendChild(uploadBtn);
+
+    if (photo) {
+      const adjustBtn = document.createElement('button');
+      adjustBtn.className = 'photo-btn upload';
+      adjustBtn.style.background = 'rgba(99,102,241,0.4)';
+      adjustBtn.textContent = '✂️ Adjust';
+      adjustBtn.onclick = () => openCropFromSaved(m.id);
+      actions.appendChild(adjustBtn);
+
+      const removeBtn = document.createElement('button');
+      removeBtn.className = 'photo-btn remove';
+      removeBtn.textContent = '✕ Remove';
+      removeBtn.onclick = () => removePhoto(m.id);
+      actions.appendChild(removeBtn);
+    }
+
+    // Google Calendar connect button
+    if (m.id !== 'family') {
+      const gcalConnected = isGCalConnected(m.id);
+      const gcalEmail = getGCalEmail(m.id);
+      const gcalBtn = document.createElement('button');
+      gcalBtn.className = 'photo-btn';
+      gcalBtn.style.cssText = gcalConnected
+        ? 'background:rgba(16,185,129,0.15);color:#10b981;font-size:11px;font-weight:700;padding:5px 10px;border-radius:10px;border:1px solid rgba(16,185,129,0.3);cursor:pointer;white-space:nowrap'
+        : 'background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.6);font-size:11px;font-weight:700;padding:5px 10px;border-radius:10px;border:none;cursor:pointer;white-space:nowrap';
+      gcalBtn.textContent = gcalConnected ? '📅 Connected' : '📅 Link Google Cal';
+      gcalBtn.title = gcalConnected ? (gcalEmail || 'Connected') + ' — tap to disconnect' : 'Connect Google Calendar';
+      gcalBtn.onclick = () => {
+        if (gcalConnected) {
+          if (confirm('Disconnect Google Calendar for ' + m.name + '?')) {
+            disconnectGCal(m.id);
+            renderProfiles();
+          }
+        } else {
+          connectGCal(m.id, (email) => {
+            showToast('✓ Google Calendar connected!');
+            renderProfiles();
+          });
+        }
+      };
+      actions.appendChild(gcalBtn);
+    }
+
+    card.appendChild(avatarWrap);
+    card.appendChild(info);
+    card.appendChild(actions);
+    grid.appendChild(card);
+  });
+}
+
+// ===== PHOTO UPLOAD =====
+function handlePhotoUpload(e, memberId) {
+  const file = e.target.files[0];
+  if (!file || !file.type.startsWith('image/')) return;
+  const reader = new FileReader();
+  reader.onload = evt => openCrop(memberId, evt.target.result);
+  reader.readAsDataURL(file);
+  e.target.value = '';
+}
+
+function openCropFromSaved(memberId) {
+  const photo = AvatarStore.getPhoto(memberId);
+  if (photo) openCrop(memberId, photo);
+}
+
+// ===== CROP LOGIC =====
+function openCrop(memberId, src) {
+  cropMemberId = memberId;
+  cropOriginalSrc = src;
+  cropX = 0; cropY = 0; cropScale = 1;
+
+  const img = document.getElementById('crop-img');
+  img.onload = () => {
+    // Fit image to fill the 240px circle by default
+    const vp = 240;
+    const minDim = Math.min(img.naturalWidth, img.naturalHeight);
+    cropScale = vp / minDim;
+    document.getElementById('crop-zoom').value = cropScale;
+    document.getElementById('crop-zoom').min = cropScale * 0.5;
+    document.getElementById('crop-zoom').max = cropScale * 4;
+    document.getElementById('crop-zoom').step = cropScale * 0.01;
+    // Center
+    cropX = (vp - img.naturalWidth * cropScale) / 2;
+    cropY = (vp - img.naturalHeight * cropScale) / 2;
+    applyCropTransform();
+  };
+  img.src = src;
+  document.getElementById('crop-overlay').classList.add('open');
+}
+
+function applyCropTransform() {
+  const img = document.getElementById('crop-img');
+  img.style.width = '';
+  img.style.height = '';
+  img.style.transform = `translate(${cropX}px, ${cropY}px) scale(${cropScale})`;
+  img.style.transformOrigin = 'top left';
+}
+
+function closeCrop() {
+  document.getElementById('crop-overlay').classList.remove('open');
+  cropMemberId = null;
+}
+
+async function saveCrop() {
+  const img = document.getElementById('crop-img');
+  const SIZE = 300;
+  const canvas = document.createElement('canvas');
+  canvas.width = SIZE; canvas.height = SIZE;
+  const ctx = canvas.getContext('2d');
+
+  // Draw circle clip
+  ctx.beginPath();
+  ctx.arc(SIZE/2, SIZE/2, SIZE/2, 0, Math.PI*2);
+  ctx.clip();
+
+  // Scale from viewport (240px) to output (300px)
+  const scale = SIZE / 240;
+  ctx.drawImage(img,
+    cropX * scale,
+    cropY * scale,
+    img.naturalWidth * cropScale * scale,
+    img.naturalHeight * cropScale * scale
+  );
+
+  const dataUrl = canvas.toDataURL('image/jpeg', 0.88);
+  const ok = await DB.savePhoto(cropMemberId, dataUrl);
+  if (ok) { showToast('✓ Photo saved!'); }
+  else { showToast('Storage full — try a smaller image'); }
+  closeCrop();
+  renderProfiles();
+}
+
+// ===== DRAG TO REPOSITION =====
+const viewport = document.getElementById('crop-viewport');
+
+// Mouse events
+viewport.addEventListener('mousedown', e => {
+  isDragging = true;
+  dragStartX = e.clientX; dragStartY = e.clientY;
+  dragStartImgX = cropX; dragStartImgY = cropY;
+  e.preventDefault();
+});
+window.addEventListener('mousemove', e => {
+  if (!isDragging) return;
+  cropX = dragStartImgX + (e.clientX - dragStartX);
+  cropY = dragStartImgY + (e.clientY - dragStartY);
+  applyCropTransform();
+});
+window.addEventListener('mouseup', () => { isDragging = false; });
+
+// Touch events
+viewport.addEventListener('touchstart', e => {
+  if (e.touches.length === 1) {
+    isDragging = true;
+    dragStartX = e.touches[0].clientX; dragStartY = e.touches[0].clientY;
+    dragStartImgX = cropX; dragStartImgY = cropY;
+    lastPinchDist = null;
+  } else if (e.touches.length === 2) {
+    isDragging = false;
+    lastPinchDist = getPinchDist(e);
+  }
+  e.preventDefault();
+}, { passive: false });
+
+viewport.addEventListener('touchmove', e => {
+  if (e.touches.length === 1 && isDragging) {
+    cropX = dragStartImgX + (e.touches[0].clientX - dragStartX);
+    cropY = dragStartImgY + (e.touches[0].clientY - dragStartY);
+    applyCropTransform();
+  } else if (e.touches.length === 2 && lastPinchDist !== null) {
+    const newDist = getPinchDist(e);
+    const ratio = newDist / lastPinchDist;
+    cropScale = Math.max(0.2, cropScale * ratio);
+    document.getElementById('crop-zoom').value = cropScale;
+    lastPinchDist = newDist;
+    applyCropTransform();
+  }
+  e.preventDefault();
+}, { passive: false });
+
+viewport.addEventListener('touchend', () => { isDragging = false; lastPinchDist = null; });
+
+function getPinchDist(e) {
+  const dx = e.touches[0].clientX - e.touches[1].clientX;
+  const dy = e.touches[0].clientY - e.touches[1].clientY;
+  return Math.sqrt(dx*dx + dy*dy);
+}
+
+// Zoom slider
+document.getElementById('crop-zoom').addEventListener('input', e => {
+  const img = document.getElementById('crop-img');
+  const oldScale = cropScale;
+  cropScale = parseFloat(e.target.value);
+  // Zoom toward center of viewport
+  const vp = 240;
+  cropX = vp/2 - (vp/2 - cropX) * (cropScale / oldScale);
+  cropY = vp/2 - (vp/2 - cropY) * (cropScale / oldScale);
+  applyCropTransform();
+});
+
+// ===== OTHER ACTIONS =====
+async function removePhoto(memberId) {
+  await DB.deletePhoto(memberId);
+  showToast('Photo removed');
+  renderProfiles();
+}
+
+function changeColor(memberId, newColor) {
+  const member = FAMILY_MEMBERS.find(m => m.id === memberId);
+  if (member) {
+    member.color = newColor;
+    const overrides = JSON.parse(localStorage.getItem('fc_color_overrides') || '{}');
+    overrides[memberId] = newColor;
+    localStorage.setItem('fc_color_overrides', JSON.stringify(overrides));
+    showToast('✓ Color updated!');
+    renderProfiles();
+  }
+}
+
+function showToast(msg) {
+  const toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 2200);
+}
+
+const colorOverrides = JSON.parse(localStorage.getItem("fc_color_overrides") || "{}");
+FAMILY_MEMBERS.forEach(m => { if (colorOverrides[m.id]) m.color = colorOverrides[m.id]; });
+// Sync photos from Supabase then render
+(async () => {
+  await DB.syncAllPhotos();
+  renderProfiles();
+  // Listen for photo changes from other devices
+  initRealtime(() => renderProfiles());
+})();
+</script>
+</body>
+</html>
